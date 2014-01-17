@@ -1,10 +1,9 @@
 package com.mycompany.myproject.test.unit;
 
 import com.mycompany.myproject.PingVerticle;
-import org.junit.Assert;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 /*
  * Copyright 2013 Red Hat, Inc.
@@ -25,12 +24,12 @@ import static org.junit.Assert.*;
  */
 public class ExampleUnitTest {
 
-  @Test
-  public void testVerticle() {
-    PingVerticle vert = new PingVerticle();
+    @Test
+    public void testVerticle() {
+        PingVerticle vert = new PingVerticle();
 
-    // Interrogate your classes directly....
+        // Interrogate your classes directly....
 
-    assertNotNull(vert);
-  }
+        assertNotNull(vert);
+    }
 }

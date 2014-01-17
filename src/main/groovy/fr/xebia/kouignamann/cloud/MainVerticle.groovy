@@ -1,6 +1,7 @@
 package fr.xebia.kouignamann.cloud
 
 import fr.xebia.kouignamann.cloud.mock.DataManagementMock
+import groovy.json.JsonSlurper
 import org.vertx.groovy.core.http.HttpServer
 import org.vertx.groovy.core.http.HttpServerRequest
 import org.vertx.groovy.core.http.RouteMatcher
@@ -53,7 +54,7 @@ class MainVerticle extends Verticle {
 
         }
 
-        matcher.get('/') {final HttpServerRequest serverRequest ->
+        matcher.get('/') { final HttpServerRequest serverRequest ->
             serverRequest.response.putHeader("Content-Type", "text/html");
             serverRequest.response.end("<html>" +
                     "<head><title>Vertx ClickStart</title></head>" +
@@ -61,6 +62,63 @@ class MainVerticle extends Verticle {
                     "<h1>Vertx ClickStart</h1></body>" +
                     "<p>Fork me <a href='https://github.com/CloudBees-community/vertx-gradle-clickstart'>here</a></p>" +
                     "</html>");
+        }
+
+        matcher.get('/slot/all') { final HttpServerRequest serverRequest ->
+            serverRequest.response.putHeader("Content-Type", "application/json");
+            vertx.fileSystem.readFile("schedule.json") { ar ->
+                if (ar.succeeded) {
+                    def result = []
+
+                    def InputJSON = new JsonSlurper().parseText(ar.result.toString())
+                    InputJSON.each {
+                        def random = new Random()
+                        it.moyenne = random.nextInt(500) / 100
+                        result << it
+
+
+                    }
+                    serverRequest.response.end(Json.encode(result))
+                } else {
+                    logger.error("Failed to read", ar.cause)
+                }
+            }
+        }
+
+        matcher.get('/schedule/all') { final HttpServerRequest serverRequest ->
+            serverRequest.response.putHeader("Content-Type", "application/json");
+            serverRequest.response.sendFile "schedule.json"
+        }
+
+        matcher.get('/slot/:id') { final HttpServerRequest serverRequest ->
+            serverRequest.response.putHeader("Content-Type", "application/json");
+            vertx.fileSystem.readFile("schedule.json") { ar ->
+                if (ar.succeeded) {
+                    def InputJSON = new JsonSlurper().parseText(ar.result.toString())
+                    InputJSON.each {
+                        if (it.id as int == serverRequest.params.id as int) {
+                            def notes = [:]
+                            def voteCount = 0
+                            def voteScore = 0
+                            def random = new Random()
+                            for (i in 1..5) {
+                                def randomInt = random.nextInt(80)
+                                notes.put(i, randomInt)
+                                voteCount += randomInt
+                                voteScore += i * randomInt
+                            }
+                            it.notes = notes
+                            it.moyenne = ((voteScore / voteCount) as double).round(2)
+                            serverRequest.response.end(Json.encode(it))
+                        }
+
+                    }
+                } else {
+                    logger.error("Failed to read", ar.cause)
+                }
+            }
+
+
         }
 
         return matcher
