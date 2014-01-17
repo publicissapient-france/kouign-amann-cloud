@@ -20,11 +20,15 @@ class MainVerticle extends Verticle {
     }
 
     private HttpServer startHttpServer(String listeningInterface, Integer listeningPort) {
-        logger.info "Start -> starting HTTP Server. Listening on: ${listeningInterface}:${listeningPort}"
 
         HttpServer server = vertx.createHttpServer()
         server.requestHandler(buildRestRoutes().asClosure())
-        server.listen(8080)
+
+        final int port = Integer.valueOf(System.getProperty("app.port", "8080"));
+
+        server.listen(port)
+        logger.info "Start -> starting HTTP Server. Listening on: ${port}"
+
     }
 
     /**
@@ -47,6 +51,16 @@ class MainVerticle extends Verticle {
                 serverRequest.response.end(Json.encode([result: message.body.result]))
             }
 
+        }
+
+        matcher.get('/') {final HttpServerRequest serverRequest ->
+            serverRequest.response.putHeader("Content-Type", "text/html");
+            serverRequest.response.end("<html>" +
+                    "<head><title>Vertx ClickStart</title></head>" +
+                    "<body>" +
+                    "<h1>Vertx ClickStart</h1></body>" +
+                    "<p>Fork me <a href='https://github.com/CloudBees-community/vertx-gradle-clickstart'>here</a></p>" +
+                    "</html>");
         }
 
         return matcher
