@@ -24,7 +24,7 @@ class MainVerticle extends Verticle {
 
         HttpServer server = vertx.createHttpServer()
         server.requestHandler(buildRestRoutes().asClosure())
-        server.listen(listeningPort, listeningInterface)
+        server.listen(8080)
     }
 
     /**
