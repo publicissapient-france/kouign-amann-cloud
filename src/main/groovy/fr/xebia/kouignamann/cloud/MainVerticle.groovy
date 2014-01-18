@@ -48,6 +48,7 @@ class MainVerticle extends Verticle {
                 logger.info "Process -> fr.xebia.kouignamann.cloud.mock.getNoteRepartition replied ${message.body.status}"
 
                 serverRequest.response.putHeader('Content-Type', 'application/json')
+                serverRequest.response.putHeader('Access-Control-Allow-Origin', '*')
                 serverRequest.response.chunked = true
                 serverRequest.response.end(Json.encode([result: message.body.result]))
             }
