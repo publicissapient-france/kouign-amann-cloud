@@ -1,0 +1,209 @@
+{"slot": [
+    {
+        "speaker": "Seven Le Mesle",
+        "speakers": [
+            {
+                "speaker": "Seven Le Mesle",
+                "speakerId": 1
+            }
+        ],
+        "type": "Conférence",
+        "id": 1,
+        "title": "Free Software at Xebia",
+        "speakerId": 1,
+        "track": "Divers",
+        "room": "GS 7"
+    },
+    {
+        "speaker": "Ludovic Perot",
+        "speakers": [
+            {
+                "speaker": "Ludovic Perot",
+                "speakerId": 2
+            },
+            {
+                "speaker": "Thibault Cavin",
+                "speakerId": 3
+            }
+        ],
+        "type": "Conférence",
+        "id": 2,
+        "title": "Inside Studio : Applications mobiles Turf",
+        "speakerId": 2,
+        "track": "Agile",
+        "room": "Mezzanine RDC"
+    },
+    {
+        "speaker": "Benoit Lemoine",
+        "speakers": [
+            {
+                "speaker": "Benoit Lemoine",
+                "speakerId": 4
+            }
+        ],
+        "type": "Conférence",
+        "id": 3,
+        "title": "Kata LiveScript, l'enfant inavouable de Haskell et Coffescript",
+        "speakerId": 4,
+        "track": "Front",
+        "room": "GS RDC"
+    },
+    {
+        "speaker": "Philippe Antoine",
+        "speakers": [
+            {
+                "speaker": "Philippe Antoine",
+                "speakerId": 5
+            }
+        ],
+        "type": "Conférence",
+        "id": 4,
+        "title": "Web Mobile et Responsive Web Design",
+        "speakerId": 5,
+        "track": "Front",
+        "room": "Studio RDC"
+    },
+    {
+        "speaker": "Julien Smadja",
+        "speakers": [
+            {
+                "speaker": "Julien Smadja",
+                "speakerId": 6
+            },
+            {
+                "speaker": "Pierre-Jean Vardanega",
+                "speakerId": 7
+            }
+        ],
+        "type": "Conférence",
+        "id": 5,
+        "title": "Getting started with Ceylon",
+        "speakerId": 6,
+        "track": "Craft",
+        "room": "GS 7"
+    },
+    {
+        "speaker": "Gérôme Egron",
+        "speakers": [
+            {
+                "speaker": "Gérôme Egron",
+                "speakerId": 8
+            },
+            {
+                "speaker": "Nicolas Jozwiak",
+                "speakerId": 9
+            }
+        ],
+        "type": "Conférence",
+        "id": 6,
+        "title": "Getting started with Ceylon",
+        "speakerId": 8,
+        "track": "Craft",
+        "room": "GS RDC"
+    },
+    {
+        "speaker": "Gérôme Egron",
+        "speakers": [
+            {
+                "speaker": "Paali Tandia",
+                "speakerId": 10
+            },
+            {
+                "speaker": "Mathieu Breton",
+                "speakerId": 11
+            }
+        ],
+        "type": "Conférence",
+        "id": 7,
+        "title": "Machine learning, premiers pas",
+        "speakerId": 10,
+        "track": "Data",
+        "room": "GS 7"
+    },
+    {
+        "speaker": "Philippe Antoine",
+        "speakers": [
+            {
+                "speaker": "Philippe Antoine",
+                "speakerId": 5
+            }
+        ],
+        "type": "Conférence",
+        "id": 8,
+        "title": "Front-end tooling: les nouveaux outils du dev web",
+        "speakerId": 5,
+        "track": "Front",
+        "room": "GS RDC"
+    },
+    {
+        "speaker": "Philippe Antoine",
+        "speakers": [
+            {
+                "speaker": "Philippe Antoine",
+                "speakerId": 5
+            }
+        ],
+        "type": "Conférence",
+        "id": 8,
+        "title": "15' pour coder Tetris en CoffeeScript",
+        "speakerId": 5,
+        "track": "Front",
+        "room": "GS RDC"
+    },
+    {
+        "speaker": "Yannick Grenzinger",
+        "speakers": [
+            {
+                "speaker": "Yannick Grenzinger",
+                "speakerId": 12
+            }
+        ],
+        "type": "Conférence",
+        "id": 9,
+        "title": "ATDD, BDD et co-création ou comment améliorer votre logiciel",
+        "speakerId": 12,
+        "track": "Agile",
+        "room": "Mezzanine RDC"
+    },
+    {
+        "speaker": "Laurene Vol",
+        "speakers": [
+            {
+                "speaker": "Laurene Vol",
+                "speakerId": 13
+            }
+        ],
+        "type": "Conférence",
+        "id": 10,
+        "title": "Les mille et une solutions de feature teams",
+        "speakerId": 13,
+        "track": "Agile",
+        "room": "Mezzanine RDC"
+    },
+    {
+        "speaker": "Emmanuel Sciara",
+        "speakers": [
+            {
+                "speaker": "Emmanuel Sciara",
+                "speakerId": 14
+            }
+        ],
+        "type": "Conférence",
+        "id": 11,
+        "title": "Confrontations Cruciales",
+        "speakerId": 14,
+        "track": "Agile",
+        "room": "Mezzanine RDC"
+    },
+    {
+        "speaker": "",
+        "speakers": [
+        ],
+        "type": "Conférence",
+        "id": 12,
+        "title": "REX d'une vague d'accompagnement Kanban chez AXA",
+        "speakerId": 0,
+        "track": "Agile",
+        "room": "Mezzanine RDC"
+    }
+]}

@@ -22,8 +22,9 @@ class DataManagementMock extends Verticle {
 
     def getNoteRepartition(Message incomingMsg) {
         logger.info("Bus <- fr.xebia.kouignamann.cloud.mock.getNoteRepartition ${incomingMsg}")
+        def random = new Random()
         incomingMsg.reply([
-                "result": ["1": 5, "2": 8, "3": 20, "4": 35, "5": 12]
+                "result": [[1, random.nextInt(10)], [2, random.nextInt(20)], [3, random.nextInt(25)], [4, random.nextInt(20)], [5, random.nextInt(10)]]
 
         ])
     }

@@ -1,6 +1,7 @@
 package fr.xebia.kouignamann.cloud
 
 import fr.xebia.kouignamann.cloud.mock.DataManagementMock
+import fr.xebia.kouignamann.cloud.mock.ScheduleJsonMock
 import groovy.json.JsonSlurper
 import org.vertx.groovy.core.http.HttpServer
 import org.vertx.groovy.core.http.HttpServerRequest
@@ -16,6 +17,7 @@ class MainVerticle extends Verticle {
         logger = container.logger
         logger.info "Starting"
         container.deployWorkerVerticle('groovy:' + DataManagementMock.class.name, container.config, 1)
+        container.deployWorkerVerticle('groovy:' + ScheduleJsonMock.class.name, container.config, 1)
 
         startHttpServer(container.config.listen, container.config.port)
     }
@@ -44,10 +46,21 @@ class MainVerticle extends Verticle {
          */
         matcher.get('/tracks') { final HttpServerRequest serverRequest ->
             logger.info "HTTP -> ${serverRequest}"
-            serverRequest.response.putHeader('Content-Type', 'application/json')
-            serverRequest.response.putHeader('Access-Control-Allow-Origin', '*')
-            serverRequest.response.chunked = true
-            serverRequest.response.end(Json.encode([result: [
+
+            vertx.eventBus.send("fr.xebia.kouignamann.cloud.mock.getTracks", [:]) { message ->
+                logger.info "Process -> fr.xebia.kouignamann.cloud.mock.getTracks replied ${message.body.status}"
+
+                serverRequest.response.putHeader('Content-Type', 'application/json')
+                serverRequest.response.putHeader('Access-Control-Allow-Origin', '*')
+                serverRequest.response.chunked = true
+                serverRequest.response.end(Json.encode([result: message.body.result]))
+            }
+
+            /*
+                    serverRequest.response.putHeader('Content-Type', 'application/json')
+                    serverRequest.response.putHeader('Access-Control-Allow-Origin', '*')
+                    serverRequest.response.chunked = true
+                    serverRequest.response.end(Json.encode([result: [
                     [track: "Agile",
                             first: [track: "a track with a long name", speaker: "First speaker", notes: [[1, 10], [2, 15], [3, 15], [4, 20], [5, 25]]],
                             second: [track: "a track with a long name", speaker: "First speaker", notes: [[1, 10], [2, 15], [3, 15], [4, 20], [5, 25]]],
@@ -57,6 +70,7 @@ class MainVerticle extends Verticle {
                             second: [track: "a track with a long name", speaker: "First speaker", notes: [[1, 10], [2, 15], [3, 15], [4, 20], [5, 25]]],
                             third: [track: "a track with a long name", speaker: "First speaker", notes: [[1, 10], [2, 15], [3, 15], [4, 20], [5, 25]]]],
             ]]))
+            */
         }
 
         /**
@@ -64,13 +78,22 @@ class MainVerticle extends Verticle {
          */
         matcher.get('/track/:id') { final HttpServerRequest serverRequest ->
             logger.info "HTTP -> ${serverRequest}"
+
+            vertx.eventBus.send("fr.xebia.kouignamann.cloud.mock.getTrack", [track: serverRequest.params.id]) { message ->
+                logger.info "Process -> fr.xebia.kouignamann.cloud.mock.getTrack replied ${message.body.status}"
+
+                serverRequest.response.putHeader('Content-Type', 'application/json')
+                serverRequest.response.putHeader('Access-Control-Allow-Origin', '*')
+                serverRequest.response.chunked = true
+                serverRequest.response.end(Json.encode([result: message.body.result]))
+
+            }
+
+            /*
             serverRequest.response.putHeader('Content-Type', 'application/json')
             serverRequest.response.putHeader('Access-Control-Allow-Origin', '*')
             serverRequest.response.chunked = true
-            vertx.fileSystem.readFile("schedule.json") { ar ->
-                if (ar.succeeded) {
-                }
-            }
+
             serverRequest.response.end(Json.encode([track: serverRequest.params.id, result: [
                     [slot: "a track with a long name", speaker: "First speaker", notes: [[1, 10], [2, 15], [3, 15], [4, 20], [5, 25]]],
                     [slot: "a track with a long name", speaker: "Second speaker", notes: [[1, 10], [2, 15], [3, 15], [4, 20], [5, 25]]],
@@ -86,9 +109,10 @@ class MainVerticle extends Verticle {
                     [slot: "a track with a long name", speaker: "Other speaker", notes: [[1, 10], [2, 15], [3, 15], [4, 20], [5, 25]]],
                     [slot: "a track with a long name", speaker: "Other speaker", notes: [[1, 10], [2, 15], [3, 15], [4, 20], [5, 25]]]
             ]]))
+            */
         }
 
-        matcher.get('/aggregate/note') { final HttpServerRequest serverRequest ->
+        matcher.get('/aggregate/note/:slotid') { final HttpServerRequest serverRequest ->
             logger.info "HTTP -> ${serverRequest}"
 
             def msg = [status: "Next"]
