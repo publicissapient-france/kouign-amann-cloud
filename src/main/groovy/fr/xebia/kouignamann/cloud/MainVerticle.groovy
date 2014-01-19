@@ -39,6 +39,55 @@ class MainVerticle extends Verticle {
     private RouteMatcher buildRestRoutes() {
         RouteMatcher matcher = new RouteMatcher()
 
+        /**
+         * List all track and for each track the best top 3 speaker and slot
+         */
+        matcher.get('/tracks') { final HttpServerRequest serverRequest ->
+            logger.info "HTTP -> ${serverRequest}"
+            serverRequest.response.putHeader('Content-Type', 'application/json')
+            serverRequest.response.putHeader('Access-Control-Allow-Origin', '*')
+            serverRequest.response.chunked = true
+            serverRequest.response.end(Json.encode([result: [
+                    [track: "Agile",
+                            first: [track: "a track with a long name", speaker: "First speaker", notes: [[1, 10], [2, 15], [3, 15], [4, 20], [5, 25]]],
+                            second: [track: "a track with a long name", speaker: "First speaker", notes: [[1, 10], [2, 15], [3, 15], [4, 20], [5, 25]]],
+                            third: [track: "a track with a long name", speaker: "First speaker", notes: [[1, 10], [2, 15], [3, 15], [4, 20], [5, 25]]]],
+                    [track: "Data",
+                            first: [track: "a track with a long name", speaker: "First speaker", notes: [[1, 10], [2, 15], [3, 15], [4, 20], [5, 25]]],
+                            second: [track: "a track with a long name", speaker: "First speaker", notes: [[1, 10], [2, 15], [3, 15], [4, 20], [5, 25]]],
+                            third: [track: "a track with a long name", speaker: "First speaker", notes: [[1, 10], [2, 15], [3, 15], [4, 20], [5, 25]]]],
+            ]]))
+        }
+
+        /**
+         * get all note distribution for this track
+         */
+        matcher.get('/track/:id') { final HttpServerRequest serverRequest ->
+            logger.info "HTTP -> ${serverRequest}"
+            serverRequest.response.putHeader('Content-Type', 'application/json')
+            serverRequest.response.putHeader('Access-Control-Allow-Origin', '*')
+            serverRequest.response.chunked = true
+            vertx.fileSystem.readFile("schedule.json") { ar ->
+                if (ar.succeeded) {
+                }
+            }
+            serverRequest.response.end(Json.encode([track: serverRequest.params.id, result: [
+                    [slot: "a track with a long name", speaker: "First speaker", notes: [[1, 10], [2, 15], [3, 15], [4, 20], [5, 25]]],
+                    [slot: "a track with a long name", speaker: "Second speaker", notes: [[1, 10], [2, 15], [3, 15], [4, 20], [5, 25]]],
+                    [slot: "a track with a long name", speaker: "Third speaker", notes: [[1, 10], [2, 15], [3, 15], [4, 20], [5, 25]]],
+                    [slot: "a track with a long name", speaker: "Other speaker", notes: [[1, 10], [2, 15], [3, 15], [4, 20], [5, 25]]],
+                    [slot: "a track with a long name", speaker: "Other speaker", notes: [[1, 10], [2, 15], [3, 15], [4, 20], [5, 25]]],
+                    [slot: "a track with a long name", speaker: "Other speaker", notes: [[1, 10], [2, 15], [3, 15], [4, 20], [5, 25]]],
+                    [slot: "a track with a long name", speaker: "Other speaker", notes: [[1, 10], [2, 15], [3, 15], [4, 20], [5, 25]]],
+                    [slot: "a track with a long name", speaker: "Other speaker", notes: [[1, 10], [2, 15], [3, 15], [4, 20], [5, 25]]],
+                    [slot: "a track with a long name", speaker: "Other speaker", notes: [[1, 10], [2, 15], [3, 15], [4, 20], [5, 25]]],
+                    [slot: "a track with a long name", speaker: "Other speaker", notes: [[1, 10], [2, 15], [3, 15], [4, 20], [5, 25]]],
+                    [slot: "a track with a long name", speaker: "Other speaker", notes: [[1, 10], [2, 15], [3, 15], [4, 20], [5, 25]]],
+                    [slot: "a track with a long name", speaker: "Other speaker", notes: [[1, 10], [2, 15], [3, 15], [4, 20], [5, 25]]],
+                    [slot: "a track with a long name", speaker: "Other speaker", notes: [[1, 10], [2, 15], [3, 15], [4, 20], [5, 25]]]
+            ]]))
+        }
+
         matcher.get('/aggregate/note') { final HttpServerRequest serverRequest ->
             logger.info "HTTP -> ${serverRequest}"
 
@@ -53,16 +102,6 @@ class MainVerticle extends Verticle {
                 serverRequest.response.end(Json.encode([result: message.body.result]))
             }
 
-        }
-
-        matcher.get('/') { final HttpServerRequest serverRequest ->
-            serverRequest.response.putHeader("Content-Type", "text/html");
-            serverRequest.response.end("<html>" +
-                    "<head><title>Vertx ClickStart</title></head>" +
-                    "<body>" +
-                    "<h1>Vertx ClickStart</h1></body>" +
-                    "<p>Fork me <a href='https://github.com/CloudBees-community/vertx-gradle-clickstart'>here</a></p>" +
-                    "</html>");
         }
 
         matcher.get('/slot/all') { final HttpServerRequest serverRequest ->
