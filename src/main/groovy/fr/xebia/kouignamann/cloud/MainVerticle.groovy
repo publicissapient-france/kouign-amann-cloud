@@ -112,6 +112,36 @@ class MainVerticle extends Verticle {
             */
         }
 
+        matcher.get('/speakers') { final HttpServerRequest serverRequest ->
+            logger.info "HTTP -> ${serverRequest}"
+
+            vertx.eventBus.send("fr.xebia.kouignamann.cloud.mock.getSpeakers", [:]) { message ->
+                logger.info "Process -> fr.xebia.kouignamann.cloud.mock.getSpeakers replied ${message.body.status}"
+
+                serverRequest.response.putHeader('Content-Type', 'application/json')
+                serverRequest.response.putHeader('Access-Control-Allow-Origin', '*')
+                serverRequest.response.chunked = true
+                serverRequest.response.end(Json.encode([result: message.body.result]))
+            }
+        }
+
+        matcher.get('/top/slot') { final HttpServerRequest serverRequest ->
+            logger.info "HTTP -> ${serverRequest}"
+
+            vertx.eventBus.send("fr.xebia.kouignamann.cloud.mock.getBestSlot", [:]) { message ->
+                logger.info "Process -> fr.xebia.kouignamann.cloud.mock.getBestSlot replied ${message.body.status}"
+
+                // For each slot get speaker
+                vertx.eventBus.send("fr.xebia.kouignamann.cloud.mock.addSpeakerOfSlot", [slots: message.body.result]) { speakersMsg ->
+                    logger.info "Process -> fr.xebia.kouignamann.cloud.mock.addSpeakerOfSlot replied ${speakersMsg.body.status}"
+                    serverRequest.response.putHeader('Content-Type', 'application/json')
+                    serverRequest.response.putHeader('Access-Control-Allow-Origin', '*')
+                    serverRequest.response.chunked = true
+                    serverRequest.response.end(Json.encode([result: speakersMsg.body.result]))
+                }
+            }
+        }
+
         matcher.get('/aggregate/note/:slotid') { final HttpServerRequest serverRequest ->
             logger.info "HTTP -> ${serverRequest}"
 

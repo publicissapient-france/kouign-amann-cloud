@@ -12,6 +12,7 @@ class DataManagementMock extends Verticle {
         logger.info "Initialize handler";
         [
                 "fr.xebia.kouignamann.cloud.mock.getNoteRepartition": this.&getNoteRepartition,
+                "fr.xebia.kouignamann.cloud.mock.getBestSlot": this.&getBestSlot,
         ].each {
             eventBusAddress, handler ->
                 vertx.eventBus.registerHandler(eventBusAddress, handler)
@@ -25,7 +26,17 @@ class DataManagementMock extends Verticle {
         def random = new Random()
         incomingMsg.reply([
                 "result": [[1, random.nextInt(10)], [2, random.nextInt(20)], [3, random.nextInt(25)], [4, random.nextInt(20)], [5, random.nextInt(10)]]
-
         ])
+    }
+
+    def getBestSlot(Message incomingMsg) {
+        logger.info("Bus <- fr.xebia.kouignamann.cloud.mock.getBestSlot ${incomingMsg}")
+        def random = new Random()
+        incomingMsg.reply([
+                "result": [
+                        [slotId: random.nextInt(11) + 1, notes: [[1, random.nextInt(10)], [2, random.nextInt(20)], [3, random.nextInt(25)], [4, random.nextInt(20)], [5, random.nextInt(10)]]],
+                        [slotId: random.nextInt(11) + 1, notes: [[1, random.nextInt(10)], [2, random.nextInt(20)], [3, random.nextInt(25)], [4, random.nextInt(20)], [5, random.nextInt(10)]]],
+                        [slotId: random.nextInt(11) + 1, notes: [[1, random.nextInt(10)], [2, random.nextInt(20)], [3, random.nextInt(25)], [4, random.nextInt(20)], [5, random.nextInt(10)]]],
+                ]])
     }
 }

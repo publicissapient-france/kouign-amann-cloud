@@ -1,0 +1,72 @@
+{"speakers": [
+    {
+        "id":1,
+        "speaker":"Seven Le Mesle",
+        "email": "slemesle@xebia.fr"
+    },
+    {
+        "id":2,
+        "speaker":"Ludovic Perot",
+        "email": "lperot@xebia.fr"
+    },
+    {
+        "id":3,
+        "speaker":"Thibault Cavin",
+        "email": "tcavin@xebia.fr"
+    },
+    {
+        "id":4,
+        "speaker":"Benoit Lemoine",
+        "email": "blemoine@xebia.fr"
+    },
+    {
+        "id":5,
+        "speaker":"Philippe Antoine",
+        "email": "pantoine@xebia.fr"
+    },
+    {
+        "id":6,
+        "speaker":"Julien Smadja",
+        "email": "jsmadja@xebia.fr"
+    },
+    {
+        "id":7,
+        "speaker":"Pierre-Jean Vardanega",
+        "email": "pvardanega@xebia.fr"
+    },
+    {
+        "id":8,
+        "speaker":"Gérôme Egron",
+        "email": "gegron@xebia.fr"
+    },
+    {
+        "id":9,
+        "speaker":"Nicolas Jozwiak",
+        "email": "njozwiak@xebia.fr"
+    },
+    {
+        "id":10,
+        "speaker":"Paali Tandia",
+        "email": "ptandia@xebia.fr"
+    },
+    {
+        "id":11,
+        "speaker":"Mathieu Breton",
+        "email": "mbreton@xebia.fr"
+    },
+    {
+        "id":12,
+        "speaker":"Yannick Grenzinger",
+        "email": "ygrenzinger@xebia.fr"
+    },
+    {
+        "id":13,
+        "speaker":"Laurene Vol",
+        "email": "lvol@xebia.fr"
+    },
+    {
+        "id":14,
+        "speaker":"Emmanuel Sciara",
+        "email": "esciara@xebia.fr"
+    },
+]}
