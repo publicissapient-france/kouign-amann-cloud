@@ -18,7 +18,7 @@ class ScheduleJsonMock extends Verticle {
 
         logger.info "Initialize data";
 
-        vertx.fileSystem.readFile("src/main/resources/schedule-xke.json") { ar ->
+        vertx.fileSystem.readFile("schedule-xke.json") { ar ->
             if (ar.succeeded) {
                 def inputJSON = new JsonSlurper().parseText(ar.result.toString())
                 // Extract map with track and slot id
@@ -34,7 +34,7 @@ class ScheduleJsonMock extends Verticle {
             }
         }
 
-        vertx.fileSystem.readFile("src/main/resources/speaker-xke.json") { ar ->
+        vertx.fileSystem.readFile("speaker-xke.json") { ar ->
             if (ar.succeeded) {
                 def inputJSON = new JsonSlurper().parseText(ar.result.toString())
                 // Extract map with track and slot id
