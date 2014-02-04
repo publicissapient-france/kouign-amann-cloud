@@ -18,6 +18,7 @@ class ScheduleJsonMock extends Verticle {
 
         logger.info "Initialize data";
 
+        //vertx.fileSystem.readFile("src/main/resources/schedule-xke.json") { ar ->
         vertx.fileSystem.readFile("schedule-xke.json") { ar ->
             if (ar.succeeded) {
                 def inputJSON = new JsonSlurper().parseText(ar.result.toString())
@@ -34,6 +35,7 @@ class ScheduleJsonMock extends Verticle {
             }
         }
 
+        //vertx.fileSystem.readFile("src/main/resources/speaker-xke.json") { ar ->
         vertx.fileSystem.readFile("speaker-xke.json") { ar ->
             if (ar.succeeded) {
                 def inputJSON = new JsonSlurper().parseText(ar.result.toString())
@@ -85,7 +87,7 @@ class ScheduleJsonMock extends Verticle {
         logger.info("Bus <- fr.xebia.kouignamann.cloud.mock.addSpeakerOfSlot ${incomingMsg}")
         def reply = []
         incomingMsg.body.slots.each { it ->
-            def slot = slots[it.slotId]
+            def slot = slots[it.slot_id]
             def speaker = speakers[slot.speakerId]
             it.slot = slot
             it.speaker = speaker

@@ -7,7 +7,7 @@
     // play around:
 
     // Java *source* verticle
-    //"main":"JavaSourcePingVerticle.java",
+    //"main": "fr.xebia.kouignamann.cloud.jdbc.InsertVoteVerticle.java",
 
     // Compiled Groovy verticle - note that they must be prefixed with 'groovy:' to distinguish them from compiled Java verticles
     "main": "groovy:fr.xebia.kouignamann.cloud.MainVerticle",

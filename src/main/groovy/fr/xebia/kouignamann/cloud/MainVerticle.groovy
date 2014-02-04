@@ -1,7 +1,8 @@
 package fr.xebia.kouignamann.cloud
 
-import fr.xebia.kouignamann.cloud.mock.DataManagementMock
+import fr.xebia.kouignamann.cloud.mock.DataManagement
 import fr.xebia.kouignamann.cloud.mock.ScheduleJsonMock
+import fr.xebia.kouignamann.cloud.mqtt.MqttDataManagementVerticle
 import groovy.json.JsonSlurper
 import org.vertx.groovy.core.http.HttpServer
 import org.vertx.groovy.core.http.HttpServerRequest
@@ -16,8 +17,11 @@ class MainVerticle extends Verticle {
     def start() {
         logger = container.logger
         logger.info "Starting"
-        container.deployWorkerVerticle('groovy:' + DataManagementMock.class.name, container.config, 1)
+        container.deployWorkerVerticle('groovy:' + DataManagement.class.name, container.config, 1)
         container.deployWorkerVerticle('groovy:' + ScheduleJsonMock.class.name, container.config, 1)
+        container.deployWorkerVerticle('groovy:' + MqttDataManagementVerticle.class.name, container.config, 1)
+        //container.deployWorkerVerticle('groovy:' + InsertVoteVerticle.class.name, container.config, 1)
+        container.deployModule('com.bloidonia~mod-jdbc-persistor~2.1', container.config.get("jdbc"), 1)
 
         startHttpServer(container.config.listen, container.config.port)
     }
@@ -128,8 +132,8 @@ class MainVerticle extends Verticle {
         matcher.get('/top/slot') { final HttpServerRequest serverRequest ->
             logger.info "HTTP -> ${serverRequest}"
 
-            vertx.eventBus.send("fr.xebia.kouignamann.cloud.mock.getBestSlot", [:]) { message ->
-                logger.info "Process -> fr.xebia.kouignamann.cloud.mock.getBestSlot replied ${message.body.status}"
+            vertx.eventBus.send("fr.xebia.kouignamann.cloud.data.getBestSlot", [:]) { message ->
+                logger.info "Process -> fr.xebia.kouignamann.data.mock.getBestSlot replied ${message.body.result}"
 
                 // For each slot get speaker
                 vertx.eventBus.send("fr.xebia.kouignamann.cloud.mock.addSpeakerOfSlot", [slots: message.body.result]) { speakersMsg ->
@@ -145,10 +149,10 @@ class MainVerticle extends Verticle {
         matcher.get('/aggregate/note/:slotid') { final HttpServerRequest serverRequest ->
             logger.info "HTTP -> ${serverRequest}"
 
-            def msg = [status: "Next"]
-            logger.info("Bus -> fr.xebia.kouignamann.cloud.mock.getNoteRepartition ${msg}")
-            vertx.eventBus.send("fr.xebia.kouignamann.cloud.mock.getNoteRepartition", msg) { message ->
-                logger.info "Process -> fr.xebia.kouignamann.cloud.mock.getNoteRepartition replied ${message.body.status}"
+            def msg = [slotId: serverRequest.params.get("slotId")]
+            logger.info("Bus -> fr.xebia.kouignamann.cloud.data.getNoteRepartition ${msg}")
+            vertx.eventBus.send("fr.xebia.kouignamann.cloud.data.getNoteRepartition", msg) { message ->
+                logger.info "Process -> fr.xebia.kouignamann.cloud.data.getNoteRepartition replied ${message.body.status}"
 
                 serverRequest.response.putHeader('Content-Type', 'application/json')
                 serverRequest.response.putHeader('Access-Control-Allow-Origin', '*')

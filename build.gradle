@@ -48,6 +48,15 @@ install - install any jars produced to the local Maven repository (.m2)
 
  */
 
+repositories {
+    mavenCentral()
+    maven {
+        url "http://repo.springsource.org/plugins-release"
+    }
+
+
+}
+
 dependencies {
     /*
     Add your module jar dependencies here
@@ -62,6 +71,8 @@ dependencies {
     provided "io.vertx:lang-groovy:$groovyLangModVersion@jar"
 
     compile 'com.sleepycat:je:5.0.73'
+    compile 'org.eclipse.paho:mqtt-client:0.4.0'
+    compile 'mysql:mysql-connector-java:5.1.28'
 
 
 }
