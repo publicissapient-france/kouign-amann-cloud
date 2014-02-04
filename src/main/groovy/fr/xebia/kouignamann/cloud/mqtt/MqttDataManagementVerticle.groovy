@@ -30,7 +30,7 @@ class MqttDataManagementVerticle extends Verticle implements MqttCallback {
     def start() {
         logger = container.logger
 
-        configure(this.container.config['mqttClient'] as Map)
+        configure(this.container.config)
 
         logger.info "Start -> Done initialize handler";
     }
