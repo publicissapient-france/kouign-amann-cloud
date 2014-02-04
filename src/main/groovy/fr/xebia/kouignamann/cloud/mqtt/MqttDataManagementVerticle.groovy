@@ -35,7 +35,7 @@ class MqttDataManagementVerticle extends Verticle implements MqttCallback {
         logger.info "Start -> Done initialize handler";
     }
 
-    def configure(Map config) throws MqttException {
+    def configure(config) throws MqttException {
         // FIXME how to use conf.json with cloudbees
         //String uri = config['server-uri']
         //String clientId = config['client-id']
