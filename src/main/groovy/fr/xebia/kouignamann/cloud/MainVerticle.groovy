@@ -21,7 +21,7 @@ class MainVerticle extends Verticle {
         container.deployWorkerVerticle('groovy:' + ScheduleJsonMock.class.name, container.config, 1)
         container.deployWorkerVerticle('groovy:' + MqttDataManagementVerticle.class.name, container.config.get("mqttClient"), 1)
         //container.deployWorkerVerticle('groovy:' + InsertVoteVerticle.class.name, container.config, 1)
-        container.deployModule('com.bloidonia~mod-jdbc-persistor~2.1', container.config.get("database.db"), 1)
+        container.deployModule('com.bloidonia.vertx.mods.JdbcProcessor', container.config.get("database.db"), 1)
 
         startHttpServer(container.config.listen, container.config.port)
     }
