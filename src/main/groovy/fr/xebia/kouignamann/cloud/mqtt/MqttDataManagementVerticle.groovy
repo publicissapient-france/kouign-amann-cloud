@@ -30,12 +30,12 @@ class MqttDataManagementVerticle extends Verticle implements MqttCallback {
     def start() {
         logger = container.logger
 
-        configure(this.container.config)
+        configure()
 
         logger.info "Start -> Done initialize handler";
     }
 
-    def configure(config) throws MqttException {
+    def configure() throws MqttException {
         // FIXME how to use conf.json with cloudbees
         //String uri = config['server-uri']
         //String clientId = config['client-id']

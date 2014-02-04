@@ -24,7 +24,7 @@ class DataManagement extends Verticle {
     def getNoteRepartition(Message incomingMsg) {
         logger.info("Bus <- fr.xebia.kouignamann.cloud.data.getNoteRepartition ${incomingMsg}")
 
-        vertx.eventBus.send("com.bloidonia.jdbcpersistor",
+        vertx.eventBus.send("vertx.database.db",
                 [action: "select", stmt: """
                     select slot_id as slot_id, note, count(0) as nbVote from votes
                     inner join rasp_slot on rasp_slot.slot_dt = votes.slot_dt AND rasp_slot.rasp_id = votes.rasp_id
@@ -49,7 +49,7 @@ class DataManagement extends Verticle {
     def getBestSlot(Message incomingMsg) {
         logger.info("Bus <- fr.xebia.kouignamann.cloud.data.getBestSlot ${incomingMsg}")
 
-        vertx.eventBus.send("com.bloidonia.jdbcpersistor",
+        vertx.eventBus.send("vertx.database.db",
                 [action: "select", stmt: """
                     select slot_id as slot_id, AVG(note) as avg from votes
                     inner join rasp_slot on rasp_slot.slot_dt = votes.slot_dt AND rasp_slot.rasp_id = votes.rasp_id
