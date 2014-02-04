@@ -48,7 +48,7 @@ class DataManagement extends Verticle {
 
     def getBestSlot(Message incomingMsg) {
         logger.info("Bus <- fr.xebia.kouignamann.cloud.data.getBestSlot ${incomingMsg}")
-        n
+
         vertx.eventBus.send("com.bloidonia.jdbcpersistor",
                 [action: "select", stmt: """
                     select slot_id as slot_id, AVG(note) as avg from votes
