@@ -17,6 +17,8 @@ class MainVerticle extends Verticle {
     def start() {
         logger = container.logger
         logger.info "Starting"
+        logger.info container.config.get("mqttClient")
+        logger.info container.config.get("database.db")
         container.deployWorkerVerticle('groovy:' + DataManagement.class.name, container.config, 1)
         container.deployWorkerVerticle('groovy:' + ScheduleJsonMock.class.name, container.config, 1)
         container.deployWorkerVerticle('groovy:' + MqttDataManagementVerticle.class.name, container.config.get("mqttClient"), 1)
