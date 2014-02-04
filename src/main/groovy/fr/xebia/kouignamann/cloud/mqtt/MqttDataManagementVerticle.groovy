@@ -36,16 +36,19 @@ class MqttDataManagementVerticle extends Verticle implements MqttCallback {
     }
 
     def configure(Map config) throws MqttException {
-        String uri = config['server-uri']
-        String clientId = config['client-id']
+        // FIXME how to use conf.json with cloudbees
+        //String uri = config['server-uri']
+        //String clientId = config['client-id']
+        def uri = "tcp://m10.cloudmqtt.com:10325"
+        def clientId = "cloud"
 
 
         client = new MqttAsyncClient(uri, clientId)
         options = new MqttConnectOptions()
-        if (config.password) {
-            options.setPassword(config.password as char[])
-            options.setUserName(config.user)
-        }
+
+        options.setPassword("kouign-amann" as char[])
+        options.setUserName("kouign-amann")
+
 
         client.setCallback(this)
         client.connect(options, new IMqttActionListener() {
