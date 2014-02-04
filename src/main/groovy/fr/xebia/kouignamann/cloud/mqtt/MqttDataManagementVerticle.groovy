@@ -1,6 +1,7 @@
 package fr.xebia.kouignamann.cloud.mqtt
 
 import org.eclipse.paho.client.mqttv3.*
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence
 import org.vertx.groovy.platform.Verticle
 import org.vertx.java.core.json.impl.Json
 
@@ -43,7 +44,7 @@ class MqttDataManagementVerticle extends Verticle implements MqttCallback {
         def clientId = "cloud"
 
 
-        client = new MqttAsyncClient(uri, clientId)
+        client = new MqttAsyncClient(uri, clientId, new MemoryPersistence())
         options = new MqttConnectOptions()
 
         options.setPassword("kouign-amann" as char[])
