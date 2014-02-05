@@ -50,7 +50,7 @@ class MqttDataManagementVerticle extends Verticle implements MqttCallback {
         options = new MqttConnectOptions()
         options.setPassword('kouign-amann'.getChars())
         options.setUserName('kouign-amann')
-        options.setCleanSession(true)
+        //options.setCleanSession(true)
 
 
         try {
