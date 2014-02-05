@@ -36,7 +36,7 @@ class MqttDataManagementVerticle extends Verticle implements MqttCallback {
         logger.info "Start -> Done initialize handler";
     }
 
-    def configure() throws MqttException {
+    def configure() {
         // FIXME how to use conf.json with cloudbees
         //String uri = config['server-uri']
         //String clientId = config['client-id']
@@ -52,7 +52,11 @@ class MqttDataManagementVerticle extends Verticle implements MqttCallback {
         options.setUserName('kouign-amann')
         options.setCleanSession(true)
 
+        try{
         client.connect(options).waitForCompletion()
+        }catch(MqttException e){
+            logger.error "Cannot connect", e
+        }
         client.subscribe('fr.xebia.kouignamann.nuc.central.processSingleVote', 2)
 
         /*
