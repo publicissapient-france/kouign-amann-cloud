@@ -57,6 +57,7 @@ class MqttDataManagementVerticle extends Verticle implements MqttCallback {
         }catch(MqttException e){
             logger.error "Cannot connect", e
         }
+        logger.info "MQTT connected"
         client.subscribe('fr.xebia.kouignamann.nuc.central.processSingleVote', 2)
 
         /*
@@ -79,14 +80,14 @@ class MqttDataManagementVerticle extends Verticle implements MqttCallback {
     @Override
     void connectionLost(Throwable throwable) {
         logger.info "connectionLost", throwable
-        while (!client.isConnected()) {
+       /* while (!client.isConnected()) {
             try {
                 client?.connect(options)
                 sleep 1000
             } catch (Exception e) {
                 e.printStackTrace()
             }
-        }
+        }*/
     }
 
     @Override
