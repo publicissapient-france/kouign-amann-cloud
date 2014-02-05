@@ -40,18 +40,22 @@ class MqttDataManagementVerticle extends Verticle implements MqttCallback {
         // FIXME how to use conf.json with cloudbees
         //String uri = config['server-uri']
         //String clientId = config['client-id']
-        def uri = "tcp://m10.cloudmqtt.com:10325"
-        def clientId = "cloud"
+        def uri = 'tcp://m10.cloudmqtt.com:10325'
+        def clientId = 'vertx-1'
 
 
         client = new MqttAsyncClient(uri, clientId, new MemoryPersistence())
-        options = new MqttConnectOptions()
-
-        options.setPassword("kouign-amann" as char[])
-        options.setUserName("kouign-amann")
-
-
         client.setCallback(this)
+
+        options = new MqttConnectOptions()
+        options.setPassword('kouign-amann'.getChars())
+        options.setUserName('kouign-amann')
+        options.setCleanSession(true)
+
+        client.connect(options).waitForCompletion()
+        client.subscribe('fr.xebia.kouignamann.nuc.central.processSingleVote', 2)
+
+        /*
         client.connect(options, new IMqttActionListener() {
             @Override
             void onSuccess(IMqttToken iMqttToken) {
@@ -62,7 +66,7 @@ class MqttDataManagementVerticle extends Verticle implements MqttCallback {
             void onFailure(IMqttToken iMqttToken, Throwable throwable) {
                 logger.fatal 'Cannot connect to broker', throwable
             }
-        })
+        })*/
 
     }
 
