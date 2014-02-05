@@ -8,7 +8,7 @@ import org.vertx.java.core.json.impl.Json
 class MqttDataManagementVerticle extends Verticle implements MqttCallback {
     def logger
 
-    MqttAsyncClient client
+    def client
     MqttConnectOptions options
 
     /*Object waiter = new Object();
@@ -44,7 +44,7 @@ class MqttDataManagementVerticle extends Verticle implements MqttCallback {
         def clientId = 'cloud'
 
 
-        client = new MqttAsyncClient(uri, clientId, new MemoryPersistence())
+        client = new MqttClient(uri, clientId, new MemoryPersistence())
         client.setCallback(this)
 
         options = new MqttConnectOptions()
@@ -52,16 +52,18 @@ class MqttDataManagementVerticle extends Verticle implements MqttCallback {
         options.setUserName('kouign-amann')
         options.setCleanSession(true)
 
-        try{
-        client.connect(options).waitForCompletion()
-        }catch(MqttException e){
+
+        try {
+            client.connect(options)
+            logger.info "MQTT connected"
+            client.subscribe('fr.xebia.kouignamann.nuc.central.processSingleVote', 2)
+        } catch (MqttException e) {
             logger.error "Cannot connect", e
         }
-        logger.info "MQTT connected"
-        client.subscribe('fr.xebia.kouignamann.nuc.central.processSingleVote', 2)
+
 
         /*
-        client.connect(options, new IMqttActionListener() {
+                client.connect(options, new IMqttActionListener() {
             @Override
             void onSuccess(IMqttToken iMqttToken) {
                 client.subscribe('fr.xebia.kouignamann.nuc.central.processSingleVote', 2)
@@ -80,14 +82,14 @@ class MqttDataManagementVerticle extends Verticle implements MqttCallback {
     @Override
     void connectionLost(Throwable throwable) {
         logger.info "connectionLost", throwable
-       /* while (!client.isConnected()) {
+        while (!client.isConnected()) {
             try {
                 client?.connect(options)
                 sleep 1000
             } catch (Exception e) {
                 e.printStackTrace()
             }
-        }*/
+        }
     }
 
     @Override
