@@ -82,7 +82,7 @@ class MqttDataManagementVerticle extends Verticle implements MqttCallback {
     @Override
     void connectionLost(Throwable throwable) {
         logger.info "connectionLost", throwable
-        while (!client.isConnected()) {
+        /*while (!client.isConnected()) {
             try {
                 client?.connect(options)
                 sleep 1000
@@ -90,6 +90,7 @@ class MqttDataManagementVerticle extends Verticle implements MqttCallback {
                 e.printStackTrace()
             }
         }
+        */
     }
 
     @Override
