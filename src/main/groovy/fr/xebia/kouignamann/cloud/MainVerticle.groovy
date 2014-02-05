@@ -20,12 +20,12 @@ class MainVerticle extends Verticle {
         logger = container.logger
         logger.info "Starting"
         logger.info container.config.get("mqttClient")
-        logger.info container.config.get("jdbc")
+        logger.info container.config.get("database.db")
         container.deployWorkerVerticle('groovy:' + DataManagement.class.name, container.config, 1)
         container.deployWorkerVerticle('groovy:' + ScheduleJsonMock.class.name, container.config, 1)
         container.deployWorkerVerticle('groovy:' + MqttDataManagementVerticle.class.name, container.config.get("mqttClient"), 1)
         //container.deployWorkerVerticle('groovy:' + InsertVoteVerticle.class.name, container.config, 1)
-        container.deployModule('com.bloidonia~mod-jdbc-persistor~2.1', container.config.get("jdbc"), 1)
+        container.deployModule('com.bloidonia~mod-jdbc-persistor~2.1', container.config.get("database.db"), 1)
 
         startHttpServer(container.config.listen, container.config.port)
     }
@@ -224,7 +224,7 @@ class MainVerticle extends Verticle {
         matcher.post('/devoxxian') { final HttpServerRequest serverRequest ->
             serverRequest.bodyHandler { Buffer body ->
                 def jsonMessage = Json.decodeValue(body.getString(0, body.length), Map)
-                vertx.eventBus.send("com.bloidonia.jdbcpersistor",
+                vertx.eventBus.send("vertx.database.db",
                         [action: "insert", stmt: """
                     INSERT INTO devoxxian VALUES (?, ?, ?)
                     ON DUPLICATE KEY UPDATE
