@@ -94,10 +94,10 @@ class MqttDataManagementVerticle extends Verticle implements MqttCallback {
 
     @Override
     void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
-        //logger.info mqttMessage
+        logger.info mqttMessage
         def jsonMessage = Json.decodeValue(new String(mqttMessage.getPayload()), Map)
         def dtInterval = getInterval(new Date(jsonMessage.voteTime))
-        vertx.eventBus.send("com.bloidonia.jdbcpersistor",
+        vertx.eventBus.send("vertx.database.db",
                 [action: "insert", stmt: """
                     INSERT INTO votes VALUES (?, ?, ?, ?, ?, ?)
                     ON DUPLICATE KEY UPDATE
