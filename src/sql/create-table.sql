@@ -1,5 +1,4 @@
-DROP TABLE votes;
-
+DROP TABLE IF EXISTS votes;
 CREATE TABLE votes (
   vote_id VARCHAR(100),
   nfc_id VARCHAR(100) NOT NULL,
@@ -8,15 +7,23 @@ CREATE TABLE votes (
   note INTEGER NOT NULL,
   dt DATETIME NOT NULL,
   PRIMARY KEY (vote_id)
-)
+);
 
 
-DROP TABLE rasp_slot;
+DROP TABLE IF EXISTS rasp_slot;
 CREATE TABLE rasp_slot (
   rasp_id VARCHAR(100),
   slot_dt VARCHAR(100),
   slot_id VARCHAR(100),
   PRIMARY KEY (rasp_id, slot_dt)
+);
+
+DROP TABLE IF EXISTS devoxxian;
+CREATE TABLE devoxxian (
+  nfc_id VARCHAR(100) NOT NULL,
+  name VARCHAR(100),
+  mail VARCHAR(100),
+  PRIMARY KEY (nfc_id)
 );
 
 INSERT INTO rasp_slot VALUES ("Salle-1","2014-02-03-12", 1);

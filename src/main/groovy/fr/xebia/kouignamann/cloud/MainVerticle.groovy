@@ -4,6 +4,8 @@ import fr.xebia.kouignamann.cloud.mock.DataManagement
 import fr.xebia.kouignamann.cloud.mock.ScheduleJsonMock
 import fr.xebia.kouignamann.cloud.mqtt.MqttDataManagementVerticle
 import groovy.json.JsonSlurper
+import org.vertx.groovy.core.buffer.Buffer
+import org.vertx.groovy.core.eventbus.Message
 import org.vertx.groovy.core.http.HttpServer
 import org.vertx.groovy.core.http.HttpServerRequest
 import org.vertx.groovy.core.http.RouteMatcher
@@ -18,12 +20,12 @@ class MainVerticle extends Verticle {
         logger = container.logger
         logger.info "Starting"
         logger.info container.config.get("mqttClient")
-        logger.info container.config.get("database.db")
+        logger.info container.config.get("jdbc")
         container.deployWorkerVerticle('groovy:' + DataManagement.class.name, container.config, 1)
         container.deployWorkerVerticle('groovy:' + ScheduleJsonMock.class.name, container.config, 1)
         container.deployWorkerVerticle('groovy:' + MqttDataManagementVerticle.class.name, container.config.get("mqttClient"), 1)
         //container.deployWorkerVerticle('groovy:' + InsertVoteVerticle.class.name, container.config, 1)
-        container.deployModule('com.bloidonia~mod-jdbc-persistor~2.1', container.config.get("database.db"), 1)
+        container.deployModule('com.bloidonia~mod-jdbc-persistor~2.1', container.config.get("jdbc"), 1)
 
         startHttpServer(container.config.listen, container.config.port)
     }
@@ -217,8 +219,25 @@ class MainVerticle extends Verticle {
                     logger.error("Failed to read", ar.cause)
                 }
             }
+        }
 
-
+        matcher.post('/devoxxian') { final HttpServerRequest serverRequest ->
+            serverRequest.bodyHandler { Buffer body ->
+                def jsonMessage = Json.decodeValue(body.getString(0, body.length), Map)
+                vertx.eventBus.send("com.bloidonia.jdbcpersistor",
+                        [action: "insert", stmt: """
+                    INSERT INTO devoxxian VALUES (?, ?, ?)
+                    ON DUPLICATE KEY UPDATE
+                    `nfc_id` = values(nfc_id),
+                    `name` = values(name),
+                    `mail` = values(mail)
+                    """, values: [jsonMessage.nfcId, jsonMessage.name, jsonMessage.mail]
+                        ],
+                        { Message response ->
+                            serverRequest.response.setStatusCode(response.body().status == 'ok' ? 200 : 500)
+                            serverRequest.response.end();
+                        })
+            }
         }
 
         return matcher
