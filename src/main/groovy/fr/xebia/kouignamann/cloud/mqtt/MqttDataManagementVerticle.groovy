@@ -41,7 +41,7 @@ class MqttDataManagementVerticle extends Verticle implements MqttCallback {
         //String uri = config['server-uri']
         //String clientId = config['client-id']
         def uri = 'tcp://m10.cloudmqtt.com:10325'
-        def clientId = 'vertx-1'
+        def clientId = 'cloud'
 
 
         client = new MqttAsyncClient(uri, clientId, new MemoryPersistence())
