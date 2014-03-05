@@ -11,7 +11,7 @@
         "id": 6,
         "title": "Approche des architectures microservices avec Vert.x",
         "speakerId": 20,
-        "track": "archi",
+        "track": "Divers",
         "room": "GS RDC"
     },
     {
@@ -26,7 +26,7 @@
         "id": 7,
         "title": "Unibail - Fid : REX d'un glorieux naufrage",
         "speakerId": 21,
-        "track": "Agile",
+        "track": "Divers",
         "room": "GS 7"
     }
 ]}
