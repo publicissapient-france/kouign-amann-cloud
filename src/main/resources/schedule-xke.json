@@ -28,5 +28,35 @@
         "speakerId": 21,
         "track": "Divers",
         "room": "GS 7"
+    },
+    {
+        "speaker": "Seven Lemesle",
+        "speakers": [
+            {
+                "speaker": "Seven Lemesle",
+                "speakerId": 1
+            }
+        ],
+        "type": "Conférence",
+        "id": 8,
+        "title": "Simplifiez vous le monitoring avec Metrics ",
+        "speakerId": 1,
+        "track": "Divers",
+        "room": "GS 7"
+    },
+    {
+        "speaker": "Remy Auricoste",
+        "speakers": [
+            {
+                "speaker": "Remy Auricoste",
+                "speakerId": 22
+            }
+        ],
+        "type": "Conférence",
+        "id": 9,
+        "title": "Dessine-moi une application déconnectée",
+        "speakerId": 22,
+        "track": "Divers",
+        "room": "GS 7"
     }
 ]}
