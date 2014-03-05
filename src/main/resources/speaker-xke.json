@@ -69,4 +69,39 @@
         "speaker":"Emmanuel Sciara",
         "email": "esciara@xebia.fr"
     },
+    {
+        "id":15,
+        "speaker":"Couthaïer Farfra",
+        "email": "cfarfra@xebia.fr"
+    },
+    {
+        "id":16,
+        "speaker":"Loic Doin",
+        "email": "ldoin@xebia.fr"
+    },
+    {
+        "id":17,
+        "speaker":"Emmanuel Gilloz",
+        "email": "egilloz@xebia.fr"
+    },
+    {
+        "id":18,
+        "speaker":"Clement Lardeur",
+        "email": "clardeur@xebia.fr"
+    },
+    {
+        "id":19,
+        "speaker":"Clement Rochas",
+        "email": "crochas@xebia.fr"
+    },
+    {
+        "id":20,
+        "speaker":"Aurélien Maury",
+        "email": "amaury@xebia.fr"
+    },
+    {
+        "id":21,
+        "speaker":"Pablo Lopez",
+        "email": "plopez@xebia.fr"
+    },
 ]}
