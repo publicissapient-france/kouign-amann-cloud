@@ -150,6 +150,67 @@ class MainVerticle extends Verticle {
             }
         }
 
+        matcher.get('/summary') { final HttpServerRequest serverRequest ->
+            logger.info "HTTP -> ${serverRequest}"
+
+            serverRequest.response.putHeader('Content-Type', 'application/json')
+            serverRequest.response.putHeader('Access-Control-Allow-Origin', '*')
+            serverRequest.response.chunked = true
+
+            serverRequest.response.end(Json.encode([
+                "best-devoxx": [
+                    slot: "Approche des architectures microservices avec Vert.x",
+                    speaker: "Aurélien Maury",
+                    avatarURL: "http://www.gravatar.com/avatar/15706981ae8b52786c1587170bb53da6?s=90px"
+                ],
+                "best-half-day": [
+                    slot: "Approche des architectures microservices avec Vert.x",
+                    speaker: "Aurélien Maury",
+                    avatarURL: "http://www.gravatar.com/avatar/15706981ae8b52786c1587170bb53da6?s=90px"
+                ],
+                "best-language": [
+                    slot: "Approche des architectures microservices avec Vert.x",
+                    speaker: "Aurélien Maury",
+                    avatarURL: "http://www.gravatar.com/avatar/15706981ae8b52786c1587170bb53da6?s=90px"
+                ],
+                "best-future": [
+                    slot: "Approche des architectures microservices avec Vert.x",
+                    speaker: "Aurélien Maury",
+                    avatarURL: "http://www.gravatar.com/avatar/15706981ae8b52786c1587170bb53da6?s=90px"
+                ],
+                "best-java": [
+                    slot: "Approche des architectures microservices avec Vert.x",
+                    speaker: "Aurélien Maury",
+                    avatarURL: "http://www.gravatar.com/avatar/15706981ae8b52786c1587170bb53da6?s=90px"
+                ],
+                "best-agility": [
+                    slot: "Approche des architectures microservices avec Vert.x",
+                    speaker: "Aurélien Maury",
+                    avatarURL: "http://www.gravatar.com/avatar/15706981ae8b52786c1587170bb53da6?s=90px"
+                ],
+                "best-web": [
+                    slot: "Approche des architectures microservices avec Vert.x",
+                    speaker: "Aurélien Maury",
+                    avatarURL: "http://www.gravatar.com/avatar/15706981ae8b52786c1587170bb53da6?s=90px"
+                ],
+                "best-startups": [
+                    slot: "Approche des architectures microservices avec Vert.x",
+                    speaker: "Aurélien Maury",
+                    avatarURL: "http://www.gravatar.com/avatar/15706981ae8b52786c1587170bb53da6?s=90px"
+                ],
+                "best-mobile": [
+                    slot: "Approche des architectures microservices avec Vert.x",
+                    speaker: "Aurélien Maury",
+                    avatarURL: "http://www.gravatar.com/avatar/15706981ae8b52786c1587170bb53da6?s=90px"
+                ],
+                "best-cloud": [
+                    slot: "Approche des architectures microservices avec Vert.x",
+                    speaker: "Aurélien Maury",
+                    avatarURL: "http://www.gravatar.com/avatar/15706981ae8b52786c1587170bb53da6?s=90px"
+                ]
+            ]))
+        }
+
         matcher.get('/aggregate/note/:slotid') { final HttpServerRequest serverRequest ->
             logger.info "HTTP -> ${serverRequest}"
 
