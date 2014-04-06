@@ -23,6 +23,10 @@ CREATE TABLE devoxxian (
   nfc_id VARCHAR(100) NOT NULL,
   name VARCHAR(100),
   mail VARCHAR(100),
+  twitter VARCHAR(100),
+  postalCode VARCHAR(100),
+  company VARCHAR(100),
+  comment VARCHAR(100),
   PRIMARY KEY (nfc_id)
 );
 

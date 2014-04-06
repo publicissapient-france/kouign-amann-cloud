@@ -287,12 +287,16 @@ class MainVerticle extends Verticle {
                 def jsonMessage = Json.decodeValue(body.getString(0, body.length), Map)
                 vertx.eventBus.send("vertx.database.db",
                         [action: "insert", stmt: """
-                    INSERT INTO devoxxian VALUES (?, ?, ?)
+                    INSERT INTO devoxxian VALUES (?, ?, ?, ?, ?, ?, ?)
                     ON DUPLICATE KEY UPDATE
                     `nfc_id` = values(nfc_id),
                     `name` = values(name),
-                    `mail` = values(mail)
-                    """, values: [jsonMessage.nfcId, jsonMessage.name, jsonMessage.mail]
+                    `mail` = values(mail),
+                    `twitter` = values(twitter),
+                    `postalCode` = values(postalCode),
+                    `company` = values(company),
+                    `comment` = values(comment)
+                    """, values: [jsonMessage.nfcId, jsonMessage.name, jsonMessage.mail, jsonMessage.twitter, jsonMessage.postalCode, jsonMessage.company, jsonMessage.comment]
                         ],
                         { Message response ->
                             serverRequest.response.setStatusCode(response.body().status == 'ok' ? 200 : 500)
