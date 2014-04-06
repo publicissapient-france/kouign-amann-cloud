@@ -307,9 +307,9 @@ class MainVerticle extends Verticle {
 
         matcher.get('/devoxxian') { final HttpServerRequest serverRequest ->
             vertx.eventBus.send("vertx.database.db", [action: "select", stmt: "select * from devoxxian;"], { response ->
-                def allDevoxxians = []
+                def devoxxians = []
                 response.body.result.each {
-                    allDevoxxians << [
+                    devoxxians << [
                         nfcId: it.nfc_id,
                         name: it.name,
                         mail: it.mail,
@@ -320,7 +320,23 @@ class MainVerticle extends Verticle {
                     ]
                 }
 
-                serverRequest.response.end(Json.encode(allDevoxxians))
+                serverRequest.response.end(Json.encode(devoxxians))
+            })
+        }
+
+        matcher.get('/vote/:nfcId') { final HttpServerRequest serverRequest ->
+            String nfcId = URLDecoder.decode(serverRequest.params.nfcId, "UTF-8");
+
+            vertx.eventBus.send("vertx.database.db", [action: "select", stmt: "select * from votes where nfc_id = ?;", values: [nfcId]], { response ->
+                def votes = []
+                response.body.result.each {
+                    votes << [
+                        note: it.note,
+                        datetime: it.dt
+                    ]
+                }
+
+                serverRequest.response.end(Json.encode(votes))
             })
         }
 
