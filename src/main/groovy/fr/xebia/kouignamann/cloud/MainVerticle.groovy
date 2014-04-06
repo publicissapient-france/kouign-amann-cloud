@@ -305,6 +305,25 @@ class MainVerticle extends Verticle {
             }
         }
 
+        matcher.get('/devoxxian') { final HttpServerRequest serverRequest ->
+            vertx.eventBus.send("vertx.database.db", [action: "select", stmt: "select * from devoxxian;"], { response ->
+                def allDevoxxians = []
+                response.body.result.each {
+                    allDevoxxians << [
+                        nfcId: it.nfc_id,
+                        name: it.name,
+                        mail: it.mail,
+                        twitter: it.twitter,
+                        postalCode: it.postalCode,
+                        company: it.company,
+                        comment: it.comment
+                    ]
+                }
+
+                serverRequest.response.end(Json.encode(allDevoxxians))
+            })
+        }
+
         return matcher
     }
 }
