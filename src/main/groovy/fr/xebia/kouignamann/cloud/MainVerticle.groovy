@@ -340,6 +340,15 @@ class MainVerticle extends Verticle {
             })
         }
 
+        matcher.get('/most-popular') { final HttpServerRequest serverRequest ->
+            logger.info "HTTP -> ${serverRequest}"
+
+            serverRequest.response.putHeader('Content-Type', 'application/json')
+            serverRequest.response.chunked = true
+
+            serverRequest.response.end(Json.encode(["USM-170", "LUQ-219", "ITU-814"]))
+        }
+
         return matcher
     }
 }
