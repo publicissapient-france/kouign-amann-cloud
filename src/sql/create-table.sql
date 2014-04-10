@@ -20,14 +20,13 @@ CREATE TABLE rasp_slot (
 
 DROP TABLE IF EXISTS devoxxian;
 CREATE TABLE devoxxian (
-  nfc_id VARCHAR(100) NOT NULL,
+  mail VARCHAR(100) NOT NULL,
   name VARCHAR(100),
-  mail VARCHAR(100),
   twitter VARCHAR(100),
   postalCode VARCHAR(100),
   company VARCHAR(100),
   comment VARCHAR(100),
-  PRIMARY KEY (nfc_id)
+  PRIMARY KEY (mail)
 );
 
 INSERT INTO rasp_slot VALUES ("Salle-1","2014-02-03-12", 1);
