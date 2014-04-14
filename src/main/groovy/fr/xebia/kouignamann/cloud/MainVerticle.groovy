@@ -324,10 +324,9 @@ class MainVerticle extends Verticle {
         matcher.get('/vote/:nfcId') { final HttpServerRequest serverRequest ->
             String nfcId = URLDecoder.decode(serverRequest.params.nfcId, "UTF-8");
 
-            vertx.eventBus.send("vertx.database.db", [action: "select", stmt: "select votes.note as note, rasp_slot.slot_id as talkId" +
-                    "from votes " +
-                    "inner join rasp_slot on rasp_slot.slot_dt = votes.slot_dt AND rasp_slot.rasp_id = votes.rasp_id " +
-                    "where nfc_id = ?;", values: [nfcId]], { response ->
+            vertx.eventBus.send("vertx.database.db", [action: "select", stmt: """select votes.note as note, rasp_slot.slot_id as talkId from votes
+inner join rasp_slot on rasp_slot.slot_dt = votes.slot_dt AND rasp_slot.rasp_id = votes.rasp_id
+where nfc_id = ?""", values: [nfcId]], { response ->
                 def votes = []
                 response.body.result.each {
                     votes << [
