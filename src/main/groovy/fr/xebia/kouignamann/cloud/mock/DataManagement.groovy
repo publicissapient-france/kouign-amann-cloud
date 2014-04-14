@@ -55,7 +55,7 @@ class DataManagement extends Verticle {
                     inner join rasp_slot on rasp_slot.slot_dt = votes.slot_dt AND rasp_slot.rasp_id = votes.rasp_id
                     group by slot_id
                     order by AVG(note) DESC
-                    limit 5;
+                    limit 3;
                     """],
                 { response ->
                     logger.info response.body.result

@@ -2,7 +2,6 @@ package fr.xebia.kouignamann.cloud
 
 import fr.xebia.kouignamann.cloud.mock.DataManagement
 import fr.xebia.kouignamann.cloud.mock.ScheduleJsonMock
-import fr.xebia.kouignamann.cloud.mqtt.MqttDataManagementVerticle
 import groovy.json.JsonSlurper
 import org.vertx.groovy.core.buffer.Buffer
 import org.vertx.groovy.core.eventbus.Message
@@ -23,10 +22,10 @@ class MainVerticle extends Verticle {
         logger.info container.config.get("database.db")
         container.deployWorkerVerticle('groovy:' + DataManagement.class.name, container.config, 1)
         container.deployWorkerVerticle('groovy:' + ScheduleJsonMock.class.name, container.config, 1)
-        container.deployWorkerVerticle('groovy:' + MqttDataManagementVerticle.class.name, container.config.get("mqttClient"), 1)
+        // container.deployWorkerVerticle('groovy:' + MqttDataManagementVerticle.class.name, container.config.get("mqttClient"), 1)
         //container.deployWorkerVerticle('groovy:' + InsertVoteVerticle.class.name, container.config, 1)
         container.deployModule('com.bloidonia~mod-jdbc-persistor~2.1', container.config.get("database.db"), 1)
-
+        println(container.config.get("database.db"))
         startHttpServer(container.config.listen, container.config.port)
     }
 
@@ -158,56 +157,56 @@ class MainVerticle extends Verticle {
             serverRequest.response.chunked = true
 
             serverRequest.response.end(Json.encode([
-                "best-devoxx": [
-                    slot: "Approche des architectures microservices avec Vert.x",
-                    speaker: "Aurélien Maury",
-                    avatarURL: "http://www.gravatar.com/avatar/15706981ae8b52786c1587170bb53da6?s=90px"
-                ],
-                "best-half-day": [
-                    slot: "Approche des architectures microservices avec Vert.x",
-                    speaker: "Aurélien Maury",
-                    avatarURL: "http://www.gravatar.com/avatar/15706981ae8b52786c1587170bb53da6?s=90px"
-                ],
-                "best-language": [
-                    slot: "Approche des architectures microservices avec Vert.x",
-                    speaker: "Aurélien Maury",
-                    avatarURL: "http://www.gravatar.com/avatar/15706981ae8b52786c1587170bb53da6?s=90px"
-                ],
-                "best-future": [
-                    slot: "Approche des architectures microservices avec Vert.x",
-                    speaker: "Aurélien Maury",
-                    avatarURL: "http://www.gravatar.com/avatar/15706981ae8b52786c1587170bb53da6?s=90px"
-                ],
-                "best-java": [
-                    slot: "Approche des architectures microservices avec Vert.x",
-                    speaker: "Aurélien Maury",
-                    avatarURL: "http://www.gravatar.com/avatar/15706981ae8b52786c1587170bb53da6?s=90px"
-                ],
-                "best-agility": [
-                    slot: "Approche des architectures microservices avec Vert.x",
-                    speaker: "Aurélien Maury",
-                    avatarURL: "http://www.gravatar.com/avatar/15706981ae8b52786c1587170bb53da6?s=90px"
-                ],
-                "best-web": [
-                    slot: "Approche des architectures microservices avec Vert.x",
-                    speaker: "Aurélien Maury",
-                    avatarURL: "http://www.gravatar.com/avatar/15706981ae8b52786c1587170bb53da6?s=90px"
-                ],
-                "best-startups": [
-                    slot: "Approche des architectures microservices avec Vert.x",
-                    speaker: "Aurélien Maury",
-                    avatarURL: "http://www.gravatar.com/avatar/15706981ae8b52786c1587170bb53da6?s=90px"
-                ],
-                "best-mobile": [
-                    slot: "Approche des architectures microservices avec Vert.x",
-                    speaker: "Aurélien Maury",
-                    avatarURL: "http://www.gravatar.com/avatar/15706981ae8b52786c1587170bb53da6?s=90px"
-                ],
-                "best-cloud": [
-                    slot: "Approche des architectures microservices avec Vert.x",
-                    speaker: "Aurélien Maury",
-                    avatarURL: "http://www.gravatar.com/avatar/15706981ae8b52786c1587170bb53da6?s=90px"
-                ]
+                    "best-devoxx": [
+                            slot: "Approche des architectures microservices avec Vert.x",
+                            speaker: "Aurélien Maury",
+                            avatarURL: "http://www.gravatar.com/avatar/15706981ae8b52786c1587170bb53da6?s=90px"
+                    ],
+                    "best-half-day": [
+                            slot: "Approche des architectures microservices avec Vert.x",
+                            speaker: "Aurélien Maury",
+                            avatarURL: "http://www.gravatar.com/avatar/15706981ae8b52786c1587170bb53da6?s=90px"
+                    ],
+                    "best-language": [
+                            slot: "Approche des architectures microservices avec Vert.x",
+                            speaker: "Aurélien Maury",
+                            avatarURL: "http://www.gravatar.com/avatar/15706981ae8b52786c1587170bb53da6?s=90px"
+                    ],
+                    "best-future": [
+                            slot: "Approche des architectures microservices avec Vert.x",
+                            speaker: "Aurélien Maury",
+                            avatarURL: "http://www.gravatar.com/avatar/15706981ae8b52786c1587170bb53da6?s=90px"
+                    ],
+                    "best-java": [
+                            slot: "Approche des architectures microservices avec Vert.x",
+                            speaker: "Aurélien Maury",
+                            avatarURL: "http://www.gravatar.com/avatar/15706981ae8b52786c1587170bb53da6?s=90px"
+                    ],
+                    "best-agility": [
+                            slot: "Approche des architectures microservices avec Vert.x",
+                            speaker: "Aurélien Maury",
+                            avatarURL: "http://www.gravatar.com/avatar/15706981ae8b52786c1587170bb53da6?s=90px"
+                    ],
+                    "best-web": [
+                            slot: "Approche des architectures microservices avec Vert.x",
+                            speaker: "Aurélien Maury",
+                            avatarURL: "http://www.gravatar.com/avatar/15706981ae8b52786c1587170bb53da6?s=90px"
+                    ],
+                    "best-startups": [
+                            slot: "Approche des architectures microservices avec Vert.x",
+                            speaker: "Aurélien Maury",
+                            avatarURL: "http://www.gravatar.com/avatar/15706981ae8b52786c1587170bb53da6?s=90px"
+                    ],
+                    "best-mobile": [
+                            slot: "Approche des architectures microservices avec Vert.x",
+                            speaker: "Aurélien Maury",
+                            avatarURL: "http://www.gravatar.com/avatar/15706981ae8b52786c1587170bb53da6?s=90px"
+                    ],
+                    "best-cloud": [
+                            slot: "Approche des architectures microservices avec Vert.x",
+                            speaker: "Aurélien Maury",
+                            avatarURL: "http://www.gravatar.com/avatar/15706981ae8b52786c1587170bb53da6?s=90px"
+                    ]
             ]))
         }
 
@@ -309,12 +308,12 @@ class MainVerticle extends Verticle {
                 def devoxxians = []
                 response.body.result.each {
                     devoxxians << [
-                        mail: it.mail,
-                        name: it.name,
-                        twitter: it.twitter,
-                        postalCode: it.postalCode,
-                        company: it.company,
-                        comment: it.comment
+                            mail: it.mail,
+                            name: it.name,
+                            twitter: it.twitter,
+                            postalCode: it.postalCode,
+                            company: it.company,
+                            comment: it.comment
                     ]
                 }
 
@@ -325,15 +324,17 @@ class MainVerticle extends Verticle {
         matcher.get('/vote/:nfcId') { final HttpServerRequest serverRequest ->
             String nfcId = URLDecoder.decode(serverRequest.params.nfcId, "UTF-8");
 
-            vertx.eventBus.send("vertx.database.db", [action: "select", stmt: "select * from votes where nfc_id = ?;", values: [nfcId]], { response ->
+            vertx.eventBus.send("vertx.database.db", [action: "select", stmt: "select votes.note as note, rasp_slot.slot_id as talkId" +
+                    "from votes " +
+                    "inner join rasp_slot on rasp_slot.slot_dt = votes.slot_dt AND rasp_slot.rasp_id = votes.rasp_id " +
+                    "where nfc_id = ?;", values: [nfcId]], { response ->
                 def votes = []
                 response.body.result.each {
                     votes << [
-                        note: it.note,
-                        datetime: it.dt
+                            note: it.note,
+                            talkId: it.talkId
                     ]
                 }
-
                 serverRequest.response.end(Json.encode(votes))
             })
         }
@@ -341,10 +342,11 @@ class MainVerticle extends Verticle {
         matcher.get('/most-popular') { final HttpServerRequest serverRequest ->
             logger.info "HTTP -> ${serverRequest}"
 
-            serverRequest.response.putHeader('Content-Type', 'application/json')
-            serverRequest.response.chunked = true
+            vertx.eventBus.send("fr.xebia.kouignamann.cloud.data.getBestSlot", [:]) { message ->
+                logger.info "Process -> fr.xebia.kouignamann.data.mock.getBestSlot replied ${message.body.result}"
+            }
 
-            serverRequest.response.end(Json.encode(["USM-170", "LUQ-219", "ITU-814"]))
+
         }
 
         return matcher
