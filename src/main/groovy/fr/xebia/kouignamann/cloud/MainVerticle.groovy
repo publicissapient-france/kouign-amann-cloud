@@ -344,10 +344,8 @@ where nfc_id = ?""", values: [nfcId]], { response ->
 
             vertx.eventBus.send("fr.xebia.kouignamann.cloud.data.getBestSlot", [:]) { message ->
                 logger.info "Process -> fr.xebia.kouignamann.data.mock.getBestSlot replied ${message.body.result}"
-                serverRequest.response.end(Json.encode(message.body.result))
+                serverRequest.response.end(Json.encode(message.body.result.slot_id))
             }
-
-
         }
 
         return matcher
