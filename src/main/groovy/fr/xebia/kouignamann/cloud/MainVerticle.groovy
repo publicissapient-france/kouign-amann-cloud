@@ -344,6 +344,7 @@ class MainVerticle extends Verticle {
 
             vertx.eventBus.send("fr.xebia.kouignamann.cloud.data.getBestSlot", [:]) { message ->
                 logger.info "Process -> fr.xebia.kouignamann.data.mock.getBestSlot replied ${message.body.result}"
+                serverRequest.response.end(Json.encode(message.body.result))
             }
 
 
