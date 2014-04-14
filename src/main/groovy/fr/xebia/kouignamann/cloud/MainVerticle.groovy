@@ -321,6 +321,17 @@ class MainVerticle extends Verticle {
             })
         }
 
+        matcher.get('/tirageMacBook') { final HttpServerRequest serverRequest ->
+            vertx.eventBus.send("vertx.database.db", [action: "select", stmt: "select mail from devoxxian;"], { response ->
+                def devoxxians = []
+                response.body.result.each {
+                    devoxxians << it.mail
+                }
+                Random rand = new Random()
+                serverRequest.response.end(devoxxians[rand.nextInt(devoxxians.size())])
+            })
+        }
+
         matcher.get('/vote/:nfcId') { final HttpServerRequest serverRequest ->
             String nfcId = URLDecoder.decode(serverRequest.params.nfcId, "UTF-8");
 
