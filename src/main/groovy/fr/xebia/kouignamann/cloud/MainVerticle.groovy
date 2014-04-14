@@ -328,10 +328,11 @@ class MainVerticle extends Verticle {
 inner join rasp_slot on rasp_slot.slot_dt = votes.slot_dt AND rasp_slot.rasp_id = votes.rasp_id
 where nfc_id = ?""", values: [nfcId]], { response ->
                 def votes = []
+                println(response.body.result)
                 response.body.result.each {
                     votes << [
                             note: it.note,
-                            talkId: it.talkId
+                            talkId: it.slot_id
                     ]
                 }
                 serverRequest.response.end(Json.encode(votes))
