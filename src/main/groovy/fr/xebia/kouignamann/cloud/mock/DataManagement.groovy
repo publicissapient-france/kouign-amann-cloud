@@ -62,7 +62,7 @@ class DataManagement extends Verticle {
                     def resp = []
                     response.body.result.each {
                         // FIXME should be string
-                        resp << [slot_id: Integer.parseInt(it.slot_id), avg: it.avg]
+                        resp << [slot_id: it.slot_id, avg: it.avg]
                     }
                     incomingMsg.reply([
                             "result": resp
