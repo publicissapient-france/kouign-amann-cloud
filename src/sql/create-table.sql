@@ -25,7 +25,7 @@ CREATE TABLE devoxxian (
   twitter VARCHAR(100),
   postalCode VARCHAR(100),
   company VARCHAR(100),
-  comment VARCHAR(100),
+  comment VARCHAR(1000),
   PRIMARY KEY (mail)
 );
 
