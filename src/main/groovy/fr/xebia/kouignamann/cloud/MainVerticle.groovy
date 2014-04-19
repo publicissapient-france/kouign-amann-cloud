@@ -90,23 +90,23 @@ class MainVerticle extends Verticle {
             }
         }
 
-        matcher.get('/devoxxian') { final HttpServerRequest serverRequest ->
-            vertx.eventBus.send("vertx.database.db", [action: "select", stmt: "select * from devoxxian;"], { response ->
-                def devoxxians = []
-                response.body.result.each {
-                    devoxxians << [
-                            mail: it.mail,
-                            name: it.name,
-                            twitter: it.twitter,
-                            postalCode: it.postalCode,
-                            company: it.company,
-                            comment: it.comment
-                    ]
-                }
-
-                serverRequest.response.end(Json.encode(devoxxians))
-            })
-        }
+//        matcher.get('/devoxxian') { final HttpServerRequest serverRequest ->
+//            vertx.eventBus.send("vertx.database.db", [action: "select", stmt: "select * from devoxxian;"], { response ->
+//                def devoxxians = []
+//                response.body.result.each {
+//                    devoxxians << [
+//                            mail: it.mail,
+//                            name: it.name,
+//                            twitter: it.twitter,
+//                            postalCode: it.postalCode,
+//                            company: it.company,
+//                            comment: it.comment
+//                    ]
+//                }
+//
+//                serverRequest.response.end(Json.encode(devoxxians))
+//            })
+//        }
 
         matcher.get('/tirageMacBook') { final HttpServerRequest serverRequest ->
             vertx.eventBus.send("vertx.database.db", [action: "select", stmt: "select mail from devoxxian;"], { response ->
