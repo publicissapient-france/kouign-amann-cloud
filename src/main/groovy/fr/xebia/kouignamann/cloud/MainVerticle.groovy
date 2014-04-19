@@ -47,27 +47,6 @@ class MainVerticle extends Verticle {
     private RouteMatcher buildRestRoutes() {
         RouteMatcher matcher = new RouteMatcher()
 
-        /**
-         * Get note for a speaker
-         */
-        matcher.get('/slot/:id') {final HttpServerRequest serverRequest ->
-            vertx.eventBus.send("vertx.database.db", [action: "select", stmt: "select * from devoxxian;"], { response ->
-                def devoxxians = []
-                response.body.result.each {
-                    devoxxians << [
-                            mail: it.mail,
-                            name: it.name,
-                            twitter: it.twitter,
-                            postalCode: it.postalCode,
-                            company: it.company,
-                            comment: it.comment
-                    ]
-                }
-
-                serverRequest.response.end(Json.encode(devoxxians))
-            })
-        }
-
         matcher.post('/devoxxian') { final HttpServerRequest serverRequest ->
             serverRequest.bodyHandler { Buffer body ->
                 def jsonMessage = Json.decodeValue(body.getString(0, body.length), Map)
