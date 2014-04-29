@@ -45,7 +45,9 @@ class MqttDataManagementVerticle extends Verticle implements MqttCallback {
         client?.connect(options)
         log.info "MQTT connected"
         client?.subscribe('fr.xebia.kouignamann.nuc.central.processSingleVote', 2)
-        client?.disconnect()
+
+        // ??
+        //client?.disconnect()
     }
 
 
