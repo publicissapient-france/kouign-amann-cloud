@@ -55,6 +55,17 @@ class MqttDataManagementVerticle extends Verticle implements MqttCallback {
     @Override
     void connectionLost(Throwable throwable) {
         log.info "connectionLost", throwable
+        // Reconnect
+        def i = 0
+        while (!client.isConnected()) {
+            try {
+                client?.connect(options)
+                sleep 1000
+            } catch (Exception e) {
+                log.error "${i} - cannot reconnect", e
+            }
+            i++
+        }
     }
 
     @Override
