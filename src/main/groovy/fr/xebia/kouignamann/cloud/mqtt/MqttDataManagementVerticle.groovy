@@ -22,7 +22,8 @@ class MqttDataManagementVerticle extends Verticle implements MqttCallback {
     }
 
     def stop() {
-        client?.disconnect()
+        if(client?.isConnected())
+            client?.disconnect()
     }
 
     def configure() throws MqttException {
