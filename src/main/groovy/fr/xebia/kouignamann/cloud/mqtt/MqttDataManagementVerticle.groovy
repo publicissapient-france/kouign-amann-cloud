@@ -40,25 +40,28 @@ class MqttDataManagementVerticle extends Verticle implements MqttCallback {
         // FIXME how to use conf.json with cloudbees
         //String uri = config['server-uri']
         //String clientId = config['client-id']
-        def uri = 'tcp://m10.cloudmqtt.com:10325'
-        def clientId = 'cloud'
+        def uri = System.getProperty('mqtt.uri', 'tcp://m10.cloudmqtt.com:10325')
+        def clientId = System.getProperty('mqtt.clientId', 'cloud')
+        def username = System.getProperty('mqtt.username', 'kouign-amann')
+        def password = System.getProperty('mqtt.password', 'kouign-amann')
 
+        logger.info "Connect to MQTT broker $uri with username $username"
 
         client = new MqttClient(uri, clientId, new MemoryPersistence())
         client.setCallback(this)
 
         options = new MqttConnectOptions()
-        options.setPassword('devoxxfr'.getChars())
-        options.setUserName('devoxx')
+        options.setPassword(password.getChars())
+        options.setUserName(username)
         //options.setCleanSession(true)
 
 
         try {
             client.connect(options)
-            logger.info "MQTT connected"
+            logger.info "MQTT connected to $client with options $options"
             client.subscribe('fr.xebia.kouignamann.nuc.central.processSingleVote', 2)
         } catch (MqttException e) {
-            logger.error "Cannot connect", e
+            logger.error "Cannot connect to $client with options $options", e
         }
 
 
