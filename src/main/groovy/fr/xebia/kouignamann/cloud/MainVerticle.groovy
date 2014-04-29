@@ -1,6 +1,7 @@
 package fr.xebia.kouignamann.cloud
 import fr.xebia.kouignamann.cloud.mock.DataManagement
 import fr.xebia.kouignamann.cloud.mock.ScheduleJsonMock
+import fr.xebia.kouignamann.cloud.mqtt.MqttDataManagementVerticle
 import org.vertx.groovy.core.buffer.Buffer
 import org.vertx.groovy.core.eventbus.Message
 import org.vertx.groovy.core.http.HttpServer
@@ -19,7 +20,7 @@ class MainVerticle extends Verticle {
         logger.info container.config.get("database.db")
         container.deployWorkerVerticle('groovy:' + DataManagement.class.name, container.config, 1)
         container.deployWorkerVerticle('groovy:' + ScheduleJsonMock.class.name, container.config, 1)
-        // container.deployWorkerVerticle('groovy:' + MqttDataManagementVerticle.class.name, container.config.get("mqttClient"), 1)
+        container.deployWorkerVerticle('groovy:' + MqttDataManagementVerticle.class.name, container.config.get("mqttClient"), 1)
         //container.deployWorkerVerticle('groovy:' + InsertVoteVerticle.class.name, container.config, 1)
         container.deployModule('com.bloidonia~mod-jdbc-persistor~2.1', container.config.get("database.db"), 1)
         println(container.config.get("database.db"))

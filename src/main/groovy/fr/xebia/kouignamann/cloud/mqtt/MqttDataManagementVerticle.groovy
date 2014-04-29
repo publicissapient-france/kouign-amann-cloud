@@ -46,7 +46,6 @@ class MqttDataManagementVerticle extends Verticle implements MqttCallback {
         def password = System.getProperty('mqtt.password', 'kouign-amann')
 
         logger.info "Connect to MQTT broker $uri with username $username"
-        logger.info container.config.get("mqttuser")
 
         client = new MqttClient(uri, clientId, new MemoryPersistence())
         client.setCallback(this)
