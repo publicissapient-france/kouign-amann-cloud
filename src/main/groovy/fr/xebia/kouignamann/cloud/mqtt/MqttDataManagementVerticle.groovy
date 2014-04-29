@@ -6,96 +6,59 @@ import org.vertx.groovy.platform.Verticle
 import org.vertx.java.core.json.impl.Json
 
 class MqttDataManagementVerticle extends Verticle implements MqttCallback {
-    def logger
+    def log
 
     def client
     MqttConnectOptions options
 
-    /*Object waiter = new Object();
-    boolean donext = false;
-    Throwable ex = null;
-
-
-    public int state = BEGIN;
-
-    static final int BEGIN = 0;
-    public static final int CONNECTED = 1;
-    static final int PUBLISHED = 2;
-    static final int SUBSCRIBED = 3;
-    static final int DISCONNECTED = 4;
-    static final int FINISH = 5;
-    static final int ERROR = 6;
-    static final int DISCONNECT = 7;
-    */
-
     def start() {
-        logger = container.logger
 
-        configure()
+        log = container.logger
 
-        logger.info "Start -> Done initialize handler";
+        log.info(this.container.config['mqttClient'])
+
+        configure(this.container.config['mqttClient'] as Map)
+
+
+        log.info('Start -> Done initialize handler')
     }
 
-    def configure() {
-        // FIXME how to use conf.json with cloudbees
-        //String uri = config['server-uri']
-        //String clientId = config['client-id']
+    def stop() {
+        log.info('Stop method not implemented yet.')
+    }
+
+    def configure(Map config) throws MqttException {
         def uri = 'tcp://m10.cloudmqtt.com:10325'
-        def clientId = 'cloud'
+        def clientId = 'cloud-application'
 
+        def persistence = new MemoryPersistence()
+        client = new MqttClient(uri, clientId, persistence)
 
-        client = new MqttClient(uri, clientId, new MemoryPersistence())
         client.setCallback(this)
 
         options = new MqttConnectOptions()
+
         options.setPassword('devoxxfr'.getChars())
         options.setUserName('devoxx')
-        //options.setCleanSession(true)
 
+        options.setCleanSession(false)
 
-        try {
-            client.connect(options)
-            logger.info "MQTT connected"
-            client.subscribe('fr.xebia.kouignamann.nuc.central.processSingleVote', 2)
-        } catch (MqttException e) {
-            logger.error "Cannot connect", e
-        }
-
-
-        /*
-                client.connect(options, new IMqttActionListener() {
-            @Override
-            void onSuccess(IMqttToken iMqttToken) {
-                client.subscribe('fr.xebia.kouignamann.nuc.central.processSingleVote', 2)
-            }
-
-            @Override
-            void onFailure(IMqttToken iMqttToken, Throwable throwable) {
-                logger.fatal 'Cannot connect to broker', throwable
-            }
-        })*/
-
+        client.connect(options)
+        log.info "MQTT connected"
+        client.subscribe('fr.xebia.kouignamann.nuc.central.processSingleVote', 2)
+        client.disconnect()
     }
 
 
 
     @Override
     void connectionLost(Throwable throwable) {
-        logger.info "connectionLost", throwable
-        while (!client.isConnected()) {
-            try {
-                client?.connect(options)
-                sleep 1000
-            } catch (Exception e) {
-                logger.error "cannot reconnect", e
-            }
-        }
-
+        log.info "connectionLost", throwable
     }
 
     @Override
     void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
-        logger.info mqttMessage
+        log.info mqttMessage
         def jsonMessage = Json.decodeValue(new String(mqttMessage.getPayload()), Map)
         def dtInterval = getInterval(new Date(jsonMessage.voteTime))
         vertx.eventBus.send("vertx.database.db",
