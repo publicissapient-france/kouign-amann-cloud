@@ -8,7 +8,8 @@ import org.vertx.java.core.json.impl.Json
 class MqttDataManagementVerticle extends Verticle implements MqttCallback {
     def logger
 
-    def client
+    boolean started
+    MqttClient client
     MqttConnectOptions options
 
     /*Object waiter = new Object();
@@ -31,6 +32,7 @@ class MqttDataManagementVerticle extends Verticle implements MqttCallback {
     def start() {
         logger = container.logger
 
+        started = true
         configure()
 
         logger.info "Start -> Done initialize handler";
@@ -85,7 +87,7 @@ class MqttDataManagementVerticle extends Verticle implements MqttCallback {
     @Override
     void connectionLost(Throwable throwable) {
         logger.info "connectionLost", throwable
-        while (!client.isConnected()) {
+        while (started && !client.isConnected()) {
             try {
                 client?.connect(options)
                 sleep 1000
@@ -131,4 +133,11 @@ class MqttDataManagementVerticle extends Verticle implements MqttCallback {
         //logger.info "deliveryComplete"
     }
 
+    @Override
+    def stop() {
+        logger.info "Stop Mqtt client"
+        started = false
+        client.disconnect()
+        client.close()
+    }
 }
