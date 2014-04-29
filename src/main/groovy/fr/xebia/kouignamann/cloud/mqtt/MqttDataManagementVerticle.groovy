@@ -15,9 +15,7 @@ class MqttDataManagementVerticle extends Verticle implements MqttCallback {
 
         log = container.logger
 
-        log.info(this.container.config['mqttClient'])
-
-        configure(this.container.config['mqttClient'] as Map)
+        configure()
 
 
         log.info('Start -> Done initialize handler')
@@ -27,7 +25,7 @@ class MqttDataManagementVerticle extends Verticle implements MqttCallback {
         client?.disconnect()
     }
 
-    def configure(Map config) throws MqttException {
+    def configure() throws MqttException {
         def uri = 'tcp://m10.cloudmqtt.com:10325'
         def clientId = 'cloud-application'
 
