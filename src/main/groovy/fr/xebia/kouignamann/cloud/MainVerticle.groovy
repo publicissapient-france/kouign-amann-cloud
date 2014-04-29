@@ -1,6 +1,7 @@
 package fr.xebia.kouignamann.cloud
 import fr.xebia.kouignamann.cloud.mock.DataManagement
 import fr.xebia.kouignamann.cloud.mock.ScheduleJsonMock
+import fr.xebia.kouignamann.cloud.mqtt.MqttDataManagementVerticle
 import org.vertx.groovy.core.buffer.Buffer
 import org.vertx.groovy.core.eventbus.Message
 import org.vertx.groovy.core.http.HttpServer
