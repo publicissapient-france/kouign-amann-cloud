@@ -12,23 +12,6 @@ class MqttDataManagementVerticle extends Verticle implements MqttCallback {
     MqttClient client
     MqttConnectOptions options
 
-    /*Object waiter = new Object();
-    boolean donext = false;
-    Throwable ex = null;
-
-
-    public int state = BEGIN;
-
-    static final int BEGIN = 0;
-    public static final int CONNECTED = 1;
-    static final int PUBLISHED = 2;
-    static final int SUBSCRIBED = 3;
-    static final int DISCONNECTED = 4;
-    static final int FINISH = 5;
-    static final int ERROR = 6;
-    static final int DISCONNECT = 7;
-    */
-
     def start() {
         logger = container.logger
 
@@ -47,7 +30,7 @@ class MqttDataManagementVerticle extends Verticle implements MqttCallback {
         def username = System.getProperty('mqtt.username', 'kouign-amann')
         def password = System.getProperty('mqtt.password', 'kouign-amann')
 
-        logger.info "Connect to MQTT broker $uri with username $username"
+        logger.info "Connect to MQTT broker $uri with username: $username, clientId: $clientId"
 
         client = new MqttClient(uri, clientId, new MemoryPersistence())
         client.setCallback(this)
@@ -55,44 +38,44 @@ class MqttDataManagementVerticle extends Verticle implements MqttCallback {
         options = new MqttConnectOptions()
         options.setPassword(password.getChars())
         options.setUserName(username)
+        options.setConnectionTimeout(MqttConnectOptions.CONNECTION_TIMEOUT_DEFAULT * 4)
+        options.setKeepAliveInterval(10)
         //options.setCleanSession(true)
-
 
         try {
             client.connect(options)
-            logger.info "MQTT connected to $client with options $options"
+            logger.info "MQTT connected to $client.serverURI with clientId: $clientId options: $options"
             client.subscribe('fr.xebia.kouignamann.nuc.central.processSingleVote', 2)
         } catch (MqttException e) {
-            logger.error "Cannot connect to $client with options $options", e
+            logger.error "Cannot connect to $client.serverURI with clientId: $clientId, options:$options", e
         }
-
-
-        /*
-                client.connect(options, new IMqttActionListener() {
-            @Override
-            void onSuccess(IMqttToken iMqttToken) {
-                client.subscribe('fr.xebia.kouignamann.nuc.central.processSingleVote', 2)
-            }
-
-            @Override
-            void onFailure(IMqttToken iMqttToken, Throwable throwable) {
-                logger.fatal 'Cannot connect to broker', throwable
-            }
-        })*/
-
     }
 
 
 
     @Override
-    void connectionLost(Throwable throwable) {
-        logger.info "connectionLost", throwable
+    synchronized void connectionLost(Throwable throwable) {
+        if (throwable instanceof MqttException) {
+            MqttException mqttException = (MqttException) throwable;
+            switch (mqttException.reasonCode) {
+                case MqttException.REASON_CODE_CONNECTION_LOST:
+                case MqttException.REASON_CODE_CLIENT_DISCONNECTING:
+                case MqttException.REASON_CODE_CONNECT_IN_PROGRESS:
+                    logger.warn "MQTT connectionLost! $throwable"
+                    break;
+                default:
+                    logger.warn "MQTT connectionLost! $throwable", throwable
+
+            }
+        } else {
+            logger.warn "MQTT connectionLost! $throwable", throwable
+        }
         while (started && !client.isConnected()) {
             try {
                 client?.connect(options)
                 sleep 1000
             } catch (Exception e) {
-                logger.error "cannot reconnect", e
+                logger.error "Cannot reconnect", e
             }
         }
 
@@ -100,7 +83,7 @@ class MqttDataManagementVerticle extends Verticle implements MqttCallback {
 
     @Override
     void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
-        logger.info mqttMessage
+        logger.info "messageArrived: $mqttMessage"
         def jsonMessage = Json.decodeValue(new String(mqttMessage.getPayload()), Map)
         def dtInterval = getInterval(new Date(jsonMessage.voteTime))
         vertx.eventBus.send("vertx.database.db",
@@ -137,7 +120,8 @@ class MqttDataManagementVerticle extends Verticle implements MqttCallback {
     def stop() {
         logger.info "Stop Mqtt client"
         started = false
-        client.disconnect()
+        if(client.isConnected())
+            client.disconnect()
         client.close()
     }
 }
