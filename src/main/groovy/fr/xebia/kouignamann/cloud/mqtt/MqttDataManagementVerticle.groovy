@@ -24,7 +24,7 @@ class MqttDataManagementVerticle extends Verticle implements MqttCallback {
     }
 
     def stop() {
-        log.info('Stop method not implemented yet.')
+        client?.disconnect()
     }
 
     def configure(Map config) throws MqttException {
@@ -43,10 +43,10 @@ class MqttDataManagementVerticle extends Verticle implements MqttCallback {
 
         options.setCleanSession(false)
 
-        client.connect(options)
+        client?.connect(options)
         log.info "MQTT connected"
-        client.subscribe('fr.xebia.kouignamann.nuc.central.processSingleVote', 2)
-        client.disconnect()
+        client?.subscribe('fr.xebia.kouignamann.nuc.central.processSingleVote', 2)
+        client?.disconnect()
     }
 
 
