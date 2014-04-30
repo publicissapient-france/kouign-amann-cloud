@@ -1,5 +1,6 @@
 package fr.xebia.kouignamann.cloud.mqtt
 
+import org.apache.commons.lang.RandomStringUtils
 import org.eclipse.paho.client.mqttv3.*
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence
 import org.vertx.groovy.platform.Verticle
@@ -27,7 +28,7 @@ class MqttDataManagementVerticle extends Verticle implements MqttCallback {
     }
 
     def configure() throws MqttException {
-        def uri = 'tcp://m10.cloudmqtt.com:10325'
+        def uri = 'tcp://m20.cloudmqtt.com:16886'
         def clientId = 'cloud-application'
 
         def persistence = new MemoryPersistence()
@@ -68,11 +69,26 @@ class MqttDataManagementVerticle extends Verticle implements MqttCallback {
         }
     }
 
+    def generateRandomId() {
+        String charset = (('A'..'F') + ('0'..'0')).join()
+        Integer length = 14
+        String randomString = RandomStringUtils.random(length, charset.toCharArray())
+        randomString = randomString.replaceAll("..(?!\$)", "\$0 ")
+        return randomString
+
+    }
+
     @Override
     void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
         log.info mqttMessage
         def jsonMessage = Json.decodeValue(new String(mqttMessage.getPayload()), Map)
         def dtInterval = getInterval(new Date(jsonMessage.voteTime))
+
+        def nfcId = jsonMessage.nfcId
+        if(nfcId.startsWith("63 00")){
+            nfcId += generateRandomId()
+        }
+
         vertx.eventBus.send("vertx.database.db",
                 [action: "insert", stmt: """
                     INSERT INTO votes VALUES (?, ?, ?, ?, ?, ?)
@@ -82,7 +98,7 @@ class MqttDataManagementVerticle extends Verticle implements MqttCallback {
                     `slot_dt` = values(slot_dt),
                     `note` = values(note),
                     `dt` = values(dt)
-                    """, values: [jsonMessage.nfcId + "_" + dtInterval, jsonMessage.nfcId,
+                    """, values: [ nfcId + "_" + dtInterval, nfcId,
                         jsonMessage.hardwareUid, dtInterval, jsonMessage.note, new Date(jsonMessage.voteTime).format('yyyy-MM-dd HH:mm:ss')]
                 ],
                 { response ->
