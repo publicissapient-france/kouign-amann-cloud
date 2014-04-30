@@ -73,6 +73,7 @@ dependencies {
     compile 'com.sleepycat:je:5.0.73'
     compile 'org.eclipse.paho:mqtt-client:0.4.0'
     compile 'mysql:mysql-connector-java:5.1.28'
+    compile 'org.apache.commons:commons-lang3:3.3.2'
 
 
 }
