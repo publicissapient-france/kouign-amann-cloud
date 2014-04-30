@@ -20,7 +20,7 @@ class MainVerticle extends Verticle {
         logger.info container.config.get("database.db")
         container.deployWorkerVerticle('groovy:' + DataManagement.class.name, container.config, 1)
         container.deployWorkerVerticle('groovy:' + ScheduleJsonMock.class.name, container.config, 1)
-        container.deployWorkerVerticle('groovy:' + MqttDataManagementVerticle.class.name, container.config.get("mqttClient"), 1)
+        container.deployWorkerVerticle('groovy:' + MqttDataManagementVerticle.class.name, container.config, 1)
         //container.deployWorkerVerticle('groovy:' + InsertVoteVerticle.class.name, container.config, 1)
         container.deployModule('com.bloidonia~mod-jdbc-persistor~2.1', container.config.get("database.db"), 1)
         println(container.config.get("database.db"))
