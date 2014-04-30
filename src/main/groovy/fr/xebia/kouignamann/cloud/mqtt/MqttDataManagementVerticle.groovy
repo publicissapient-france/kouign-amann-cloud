@@ -1,6 +1,6 @@
 package fr.xebia.kouignamann.cloud.mqtt
 
-import org.apache.commons.lang.RandomStringUtils
+import org.apache.commons.lang3.RandomStringUtils
 import org.eclipse.paho.client.mqttv3.*
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence
 import org.vertx.groovy.platform.Verticle
