@@ -9,56 +9,82 @@ import org.vertx.java.core.json.impl.Json
 class MqttDataManagementVerticle extends Verticle implements MqttCallback {
     def log
 
-    def client
+    boolean started
+    MqttClient client
     MqttConnectOptions options
 
     def start() {
-
         log = container.logger
 
+        started = true
         configure()
 
 
-        log.info('Start -> Done initialize handler')
+        log.info('Start -> Done initialize MQTT handler')
     }
 
+    @Override
     def stop() {
-        if(client?.isConnected())
-            client?.disconnect()
+        log.info "Stop Mqtt client"
+        started = false
+        if (client.isConnected())
+            client.disconnect()
+        client.close()
     }
 
-    def configure() throws MqttException {
-        def uri = 'tcp://m20.cloudmqtt.com:16886'
-        def clientId = 'cloud-application'
+    def configure() {
+        // FIXME how to use conf.json with cloudbees
+        //String uri = config['server-uri']
+        //String clientId = config['client-id']
+        def uri = System.getProperty('mqtt.uri', 'tcp://m10.cloudmqtt.com:10325')
+        def clientId = System.getProperty('mqtt.clientId', 'cloud')
+        def username = System.getProperty('mqtt.username', 'kouign-amann')
+        def password = System.getProperty('mqtt.password', 'kouign-amann')
 
         def persistence = new MemoryPersistence()
         client = new MqttClient(uri, clientId, persistence)
 
+
+        log.info "Trying to connect to MQTT broker $uri with username: $username, clientId: $clientId"
         client.setCallback(this)
 
         options = new MqttConnectOptions()
 
-        options.setPassword('devoxx'.getChars())
-        options.setUserName('devoxxfr')
-
+        options.setPassword(password.getChars())
+        options.setUserName(username)
+        options.setConnectionTimeout(MqttConnectOptions.CONNECTION_TIMEOUT_DEFAULT * 4)
+        options.setKeepAliveInterval(10)
         options.setCleanSession(false)
 
-        client?.connect(options)
-        log.info "MQTT connected"
-        client?.subscribe('fr.xebia.kouignamann.nuc.central.processSingleVote', 2)
-
-        // ??
-        //client?.disconnect()
+        try {
+            client.connect(options)
+            log.info "MQTT connected to $client.serverURI with clientId: $clientId options: $options"
+            client.subscribe('fr.xebia.kouignamann.nuc.central.processSingleVote', 2)
+        } catch (MqttException e) {
+            log.error "Cannot connect to $client.serverURI with clientId: $clientId, options:$options", e
+        }
     }
 
-
-
     @Override
-    void connectionLost(Throwable throwable) {
-        log.info "connectionLost", throwable
-        // Reconnect
+    synchronized void connectionLost(Throwable throwable) {
+        if (throwable instanceof MqttException) {
+            MqttException mqttException = (MqttException) throwable;
+            switch (mqttException.reasonCode) {
+                case MqttException.REASON_CODE_CONNECTION_LOST:
+                case MqttException.REASON_CODE_CLIENT_DISCONNECTING:
+                case MqttException.REASON_CODE_CONNECT_IN_PROGRESS:
+                    log.warn "MQTT connectionLost! $throwable"
+                    break;
+                default:
+                    log.warn "MQTT connectionLost! $throwable", throwable
+
+            }
+        } else {
+            log.warn "MQTT connectionLost! $throwable", throwable
+        }
+
         def i = 0
-        while (!client.isConnected()) {
+        while (started && !client.isConnected()) {
             try {
                 client?.connect(options)
                 sleep 1000
@@ -80,12 +106,13 @@ class MqttDataManagementVerticle extends Verticle implements MqttCallback {
 
     @Override
     void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
-        log.info mqttMessage
+        log.info "messageArrived: $mqttMessage"
+
         def jsonMessage = Json.decodeValue(new String(mqttMessage.getPayload()), Map)
         def dtInterval = getInterval(new Date(jsonMessage.voteTime))
 
         def nfcId = jsonMessage.nfcId
-        if(nfcId.startsWith("63 00")){
+        if (nfcId.startsWith("63 00")) {
             nfcId += generateRandomId()
         }
 
@@ -98,7 +125,7 @@ class MqttDataManagementVerticle extends Verticle implements MqttCallback {
                     `slot_dt` = values(slot_dt),
                     `note` = values(note),
                     `dt` = values(dt)
-                    """, values: [ nfcId + "_" + dtInterval, nfcId,
+                    """, values: [nfcId + "_" + dtInterval, nfcId,
                         jsonMessage.hardwareUid, dtInterval, jsonMessage.note, new Date(jsonMessage.voteTime).format('yyyy-MM-dd HH:mm:ss')]
                 ],
                 { response ->
@@ -118,5 +145,4 @@ class MqttDataManagementVerticle extends Verticle implements MqttCallback {
     void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
         //logger.info "deliveryComplete"
     }
-
 }
